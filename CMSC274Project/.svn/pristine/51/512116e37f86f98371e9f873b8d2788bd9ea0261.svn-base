@@ -1,0 +1,24 @@
+package testing;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import model.BackEndBoard;
+import model.Dino;
+import model.DinoList;
+import model.Velociraptor;
+
+public class DinosaurPathingTest {
+
+	@Test
+	public void testlvl1Moves() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Dino temp = dl.getIndex(0);
+		temp.setFoundHuman(true);
+		temp.moveDinosaur(backEnd.getBoard(), 0, 0);
+		
+	}
+
+}

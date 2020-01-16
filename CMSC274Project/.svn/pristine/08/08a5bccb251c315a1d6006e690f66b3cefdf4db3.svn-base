@@ -1,0 +1,50 @@
+package edu.ben.visual;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import edu.ben.model.DinosaurGame;
+
+public abstract class DinosaurFrame extends JFrame {
+	protected DinosaurGame game;
+
+	public DinosaurFrame(DinosaurGame game) {
+		this.game = game;
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3878736530154561197L;
+
+	/**
+	 * method used to call the sound class which plays audio for the games current
+	 * level
+	 */
+	public abstract void sound();
+
+	/**
+	 * adds the quit button to the frame
+	 * 
+	 * @return the quit button
+	 */
+	public abstract JButton setUpQuitLevelButton();
+
+	/**
+	 * adds a speaker button which controls the audio
+	 * 
+	 * @return the speaker button
+	 */
+	public abstract JButton addSpeakers();
+	/*
+	 * ImageIcon quit = new ImageIcon("quitLevel.png"); JButton quitLevelButton =
+	 * new JButton(""); quitLevelButton.setBounds(1043, 785, 157, 81);
+	 * quitLevelButton.setIcon(quit); quitLevelButton.setContentAreaFilled(false);
+	 * quitLevelButton.setFocusPainted(false);
+	 * quitLevelButton.setBorderPainted(false); return quitLevelButton;
+	 */
+
+	// need to add mixer
+
+}

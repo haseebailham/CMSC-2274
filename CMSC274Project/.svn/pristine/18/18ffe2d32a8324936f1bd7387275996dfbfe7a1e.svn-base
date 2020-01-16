@@ -1,0 +1,121 @@
+package testing;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import model.BackEndBoard;
+import model.Dino;
+import model.DinoList;
+import model.Herbivore;
+import model.Velociraptor;
+
+public class DinoListTest {
+
+	@Test
+	public void DinoListTestLvl1() {
+		DinoList dl = new DinoList();
+		Dino temp = new Herbivore("ankylosaurus");
+		dl.addDino(temp);
+		Dino h = dl.getIndex(0);
+		char actual = h.getCharName();
+		char expected = 'A';
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	public void DinoListTestLvl1MovmentAmount() {
+		DinoList dl = new DinoList();
+		Dino temp = new Herbivore("ankylosaurus");
+		dl.addDino(temp);
+		Dino h = dl.getIndex(0);
+		int actual = h.getMovement();
+		int expected = 1;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void DinoListTestLvl2() {
+		DinoList dl = new DinoList();
+		Dino temp = new Velociraptor();
+		dl.addDino(temp);
+		Dino h = dl.getIndex(0);
+		char actual = h.getCharName();
+		char expected = 'V';
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	public void DinoListTestLvl2MovmentAmount() {
+		DinoList dl = new DinoList();
+		Dino temp = new Velociraptor();
+		dl.addDino(temp);
+		Dino h = dl.getIndex(0);
+		int actual = h.getMovement();
+		int expected = 2;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void DinoListTestLvl2Movment() {
+		DinoList dl = new DinoList();
+		Dino temp = new Velociraptor();
+		char[][] board = new char[5][5];
+		board[3][3] = 'H';
+		board[1][1] = 'V';
+		temp.setDinoX(1);
+		temp.setDinoY(1);
+		temp.setFoundHuman(true);
+		dl.addDino(temp);
+		dl.moveDinosaurs(board, 3, 3, 0);
+		int[] actual = dl.getDinoList().get(0).getPrevLocation();
+		int[] expected = { 1, 1 };
+		assertArrayEquals(expected, actual);
+
+	}
+
+	@Test
+	public void DinoListTestLvl2LoopedMovement() {
+		DinoList dl = new DinoList();
+		Dino temp = new Velociraptor();
+		BackEndBoard b = new BackEndBoard(1);
+
+		char[][] board = new char[8][8];
+		board[7][7] = 'H';
+		board[0][0] = 'V';
+		temp.setDinoX(0);
+		temp.setDinoY(0);
+		temp.setFoundHuman(true);
+		dl.addDino(temp);
+		int[] prevDinosaurLoc = new int[2]; // hold prev dinosaurs location
+		int[] newDinosaurLoc = new int[2]; // holds new dinosaurs location
+		for (int i = 0; i < 5; i++) {
+			dl.moveDinosaurs(board, 7, 7, 0);
+			prevDinosaurLoc = dl.getPrevDinosaurLoctaion(0); // gets the location for each dinosaur
+			newDinosaurLoc = dl.getCurrentDinosaurLoctaion(0);
+			board[prevDinosaurLoc[0]][prevDinosaurLoc[1]] = 0;
+			board[newDinosaurLoc[0]][newDinosaurLoc[1]] = 'V';
+		}
+
+		int[] actual = { dl.getDinoList().get(0).getDinoX(), dl.getDinoList().get(0).getDinoY() };
+		int[] expected = { 6, 6 };
+		assertArrayEquals(expected, actual);
+
+	}
+
+	@Test
+	public void DinoListTestLvl2RandomMovment() {
+		DinoList dl = new DinoList();
+		Dino temp = new Velociraptor();
+		char[][] board = new char[5][5];
+		board[2][1] = 'V';
+		temp.setDinoX(2);
+		temp.setDinoY(1);
+		dl.addDino(temp);
+		dl.moveDinosaurs(board, 3, 3, 0);
+		Dino h = dl.getIndex(0);
+		int[] actual = h.getPrevLocation();
+		int[] expected = { 2, 1 };
+		assertArrayEquals(expected, actual);
+	}
+}

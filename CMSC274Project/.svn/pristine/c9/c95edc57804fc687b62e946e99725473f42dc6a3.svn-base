@@ -1,0 +1,21 @@
+package edu.ben.dino;
+
+import edu.ben.model.Bubble;
+
+/**
+ * Dino Bubble class, subclass of Bubble class.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class DinoBubble extends Bubble {
+
+	/**
+	 * Public constructor for DinoBubble class.
+	 * @param level 
+	 * 				level number
+	 */
+	public DinoBubble(int level) {
+		super(level);
+	}
+
+}

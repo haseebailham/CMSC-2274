@@ -1,0 +1,10 @@
+package edu.ben.tests;
+
+/**
+ * Tests ScoresHistory class.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class ScoresHistoryTest {
+
+}

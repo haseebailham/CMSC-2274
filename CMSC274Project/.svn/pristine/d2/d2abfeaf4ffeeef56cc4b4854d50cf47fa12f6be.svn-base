@@ -1,0 +1,173 @@
+package model;
+
+import java.awt.EventQueue;
+
+import visual.DinosaurFrame;
+import visual.Lvl1Frame;
+import visual.Lvl2GUI;
+import visual.Lvl3GUI;
+import visual.SplashScreenGUI;
+
+/**
+ * Main Game, starts game and sets GUI visible.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class DinosaurGame {
+	/**
+	 * board array for levels
+	 */
+	private BackEndBoard board;
+	/**
+	 * Level number starts at lvl 1
+	 */
+	private int level = 0;
+	private int extra = 0;
+	private DinosaurFrame frame;
+
+	private boolean lvlOver = false;
+	private static DinosaurGame game = new DinosaurGame();
+
+	public DinosaurGame() {
+
+	}
+
+	public static void main(String[] args) {
+		// DinosaurGame game = new DinosaurGame();
+		game.startLevel(game);
+		// game.playGame(game);
+
+	}
+
+	public void playGame() {
+		// levels:
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					// setLevel(game);
+					frame.setVisible(true);
+					frame.setTitle("Dinosaur Game: Level " + level);
+
+					// level++;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		/*
+		 * Level1 lvl1 = new Level1(); // lvl1.playLevel(lvl1);
+		 */ }
+
+	/**
+	 * @return the board
+	 */
+	public BackEndBoard getBoard() {
+		return board;
+	}
+
+	public void nextLevel() {
+		level++;
+		startLevel(game);
+
+	}
+
+	/**
+	 * @param board
+	 *            the board to set
+	 */
+	public void setBoard(BackEndBoard board) {
+		this.board = board;
+	}
+
+	public void closeFrame() {
+		frame.setVisible(false);
+		// frame.dispose();
+	}
+
+	/**
+	 * exits the game from splash screen
+	 */
+	public void quitGame() {
+		frame.dispose();
+	}
+
+	/**
+	 * exits the current level and goes to splash screen
+	 */
+	public void quitLevel() {
+		closeFrame();
+		level = 0;
+		startLevel(game);
+	}
+
+	/**
+	 * sets frame to new lvl frame sets backEnd to new lvl backEnd
+	 */
+	public void startLevel(DinosaurGame game) {
+		if (level == 0) {
+			frame = new SplashScreenGUI(game);
+			playGame();
+		} else if (level == 1) {
+			board = new BackEndBoard(level);
+			frame = new Lvl1Frame(game);
+			playGame();
+		} else if (level == 2) {
+			board = new BackEndBoard(level);
+			frame = new Lvl2GUI(game);
+			playGame();
+		} else if (level == 3) {
+			board = new BackEndBoard(level);
+			// frame = new Lvl3GUI(game);
+			frame = new Lvl3GUI(game);
+			playGame();
+		}
+	}
+
+	/**
+	 * @return the lvlOver
+	 */
+	public boolean isLvlOver() {
+		return lvlOver;
+	}
+
+	/**
+	 * @param lvlOver
+	 *            the lvlOver to set
+	 */
+	public void setLvlOver(boolean lvlOver) {
+		this.lvlOver = lvlOver;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the frame
+	 */
+	public DinosaurFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame
+	 *            the frame to set
+	 */
+	public void setFrame(DinosaurFrame frame) {
+		this.frame = frame;
+	}
+
+}

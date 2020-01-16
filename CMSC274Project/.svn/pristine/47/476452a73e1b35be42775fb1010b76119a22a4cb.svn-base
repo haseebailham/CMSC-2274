@@ -1,0 +1,27 @@
+package model;
+
+import java.util.Random;
+
+/**
+ * RandomGen class, responsible for producing random integers within a certain
+ * range
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class RandomGen {
+	Random r = new Random();
+
+	/**
+	 * This method will generate a random number from 1-the number passed in
+	 * 
+	 * @param available
+	 *            the number of riddles that will be available for the particular
+	 *            level
+	 * @return a randomly generated number within the appropriate range
+	 */
+	public int randomNum(int available) {
+		int num = r.nextInt(available) + 1;
+		return num;
+	}
+}

@@ -1,0 +1,167 @@
+package testing;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import model.BackEndBoard;
+import model.Dino;
+import model.DinoList;
+import model.DinosaurMovement;
+import model.Herbivore;
+
+import model.Human;
+
+import student.TestCase;
+
+public class DinosaurMovementTest extends TestCase {
+
+	@Test
+	/**
+	 * test lvl 1 herbivore dmg to human
+	 */
+	public void testDmgHuman() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+
+		backEnd.placeCharBoard(1, 1, 'H');
+		backEnd.removeIndex(backEnd.getHuman().removePrevPosition());
+		backEnd.displayBoard();
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+		if (dm.checkForHuman(0)) {
+			backEnd.getHuman().getHealth().changeHealth("herbivore");
+		}
+		int actual = backEnd.getHuman().getHealth().getHealthBar();
+		int expected = 80;
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	/**
+	 * test if valid move before moving
+	 */
+	public void testVaildMove() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+		Dino temp = new Herbivore("Ankylosaurus");
+		backEnd.addDino(9, 14, temp);
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+
+		boolean actual = dm.validMove(0, temp);
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * checks to see if dinosaur has moved on the board
+	 */
+	public void testDinoPlacement() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+		Dino temp = new Herbivore("Ankylosaurus");
+		backEnd.addDino(9, 14, temp);
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+		dm.moveDinosaurs();
+		boolean actual = true;
+		if (backEnd.getBoard()[9][14] == 'A') {
+			actual = false;
+		}
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * looks for a Invalid move for lvl 2
+	 */
+	public void testInvaildMoveLvl2() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+
+		boolean actual = dm.validMove(0, dl.getIndex(0));
+		assertFalse(actual);
+	}
+
+	@Test
+	/**
+	 * checks for a valid move lvl2
+	 */
+	public void testVaildMoveLvl2() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+
+		boolean actual = dm.validMove(4, dl.getIndex(0));
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * checks for human on lvl2
+	 */
+	public void testCheckForHumanLvL2() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Human human = backEnd.getHuman();
+		human.addNewPosition(0, 1);
+		backEnd.placeCharBoard(0, 1, 'H');
+		backEnd.removeIndex(human.removePrevPosition());
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+
+		boolean actual = dm.checkForHuman(0);
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * test to see if position 2 list is correct
+	 */
+	public void checkRandomMove() {
+		int newMove = 1;
+		BackEndBoard backEnd = new BackEndBoard(1);
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+		backEnd.displayBoard();
+		for (int i = 0; i < backEnd.getDl().getSize(); i++) {
+			dm.move(backEnd.getDl().getIndex(i), i);
+
+		}
+		System.out.println();
+		backEnd.displayBoard();
+
+	}
+
+	@Test
+	/**
+	 * test to see if position 2 list is correct
+	 */
+	public void checkRandomMovelvl1() {
+		int newMove = 1;
+		BackEndBoard backEnd = new BackEndBoard(1);
+		DinosaurMovement dm = new DinosaurMovement(backEnd, 0, 0);
+		// backEnd.displayBoard();
+		for (int i = 1; i < backEnd.getDl().getSize(); i++) {
+			// System.out.println("dino loc: " + backEnd.getDl().getIndex(i).getDinoX() + "
+			// " + backEnd.getDl().getIndex(i).getDinoY());
+			// int[] actual = dm.move(backEnd.getDl().getIndex(i), i);
+			backEnd.displayBoard();
+			dm.move(backEnd.getDl().getIndex(i), i);
+			// System.out.println("2: " + actual[0] + " " + actual[1]);
+		}
+		System.out.println();
+
+	}
+
+	/*
+	 * @Test
+	 *//**
+		 * test to see if a dinosaur has moved on the board
+		 *//*
+			 * public void testMovementLvl2() { // still doing BackEndBoard backEnd = new
+			 * BackEndBoard(2); DinoList dl = backEnd.getDl();
+			 * backEnd.display(backEnd.getBoard()); System.out.println(); DinosaurMovement
+			 * dm = new DinosaurMovement(backEnd, 0, 0); dm.moveDinosaurs();
+			 * backEnd.display(backEnd.getBoard()); System.out.println();
+			 * dm.moveDinosaurs(); backEnd.display(backEnd.getBoard()); }
+			 */
+
+}

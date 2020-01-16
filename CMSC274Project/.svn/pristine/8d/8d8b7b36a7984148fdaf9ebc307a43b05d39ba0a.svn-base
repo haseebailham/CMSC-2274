@@ -1,0 +1,299 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.LinkedList;
+import java.util.Queue;
+import javax.swing.JButton;
+
+/**
+ * moves the dinosaurs around the board
+ * 
+ * @author abdul
+ *
+ */
+public class DinosaurMovement {
+	// char[][] board = new char[10][10];
+	BackEndBoard board;
+	private char[][] boardArry;
+	private int humanX;
+	private int humanY;
+	private Random rand = new Random();
+	private DinoList dl = new DinoList();
+	private int level;
+
+	public DinosaurMovement(BackEndBoard board, int humanX, int humanY) { // not 100% on what parameter i will
+		// need these are i needed to far
+		// this.btns = btns;
+		this.humanX = humanX;
+		this.humanY = humanY;
+		this.level = board.getLevel();
+		dl = board.getDl();
+		this.board = board; // gets backend 2-d array
+		this.boardArry = board.getBoard();
+		generateBubbles(); // makes bubble for dinosaurs starting location
+	}
+
+	// look for human then move then look again
+	public void moveDinosaurs() { // still working but call this method and it will move the dinosaurs
+									// in the list
+		// if human X is greater head down the board
+		// if human Y is bigger head left
+
+		for (int i = 0; i < dl.getSize(); i++) {
+			if (level > 1) {
+				generateRandomMove(dl.getIndex(i), i);
+				/*if (checkForHuman(i)) { // is true if human is in bubble then dinosaur heads to toward them
+
+				} else {
+					
+				}*/
+			} else { // dinos move randomly on first level
+				generateRandomMove(dl.getIndex(i), i);
+			}
+
+		}
+		generateBubbles(); // after dinos have moved makes a bubble from new location
+
+	}
+
+	/**
+	 * makes a bubble for each dinosaur in the list based off of current position
+	 */
+	public void generateBubbles() {
+		for (int i = 0; i < dl.getSize(); i++) {
+			dl.getIndex(i).setBubble(dl.getIndex(i).makeBubble(boardArry));
+		}
+	}
+
+	/**
+	 * checks to see if human is in the bubble
+	 * 
+	 * @param index
+	 *            index of which dinosaur to check in the list
+	 * @return boolean true if human is in bubble
+	 */
+	public boolean checkForHuman(int index) {
+		return dl.getIndex(index).getBubble().checkBubbleForHuman();
+	}
+
+	/**
+	 * checks if the char array index is empty (clear)
+	 * 
+	 * @param i
+	 *            int i for the i index for 2-d array
+	 * @param j
+	 *            int j for the j index [i][j]
+	 * @return true if the index is clear
+	 */
+	public boolean clearSpot(int i, int j) {
+		return boardArry[i][j] == 0;
+	}
+
+	/**
+	 * moves the dinosaur in a random location based on how many moves that can make
+	 * and updates the dinosaurBoard
+	 * 
+	 * @param temp
+	 *            dinosaur to move
+	 * @param index
+	 *            the index location in the dinoList to update the dinosaurs new
+	 *            loction
+	 * 
+	 * @return the location the dinosaur has moved to
+	 */
+	public void generateRandomMove(Dino temp, int index) {
+		// still working on this idea for the movement
+		// dinosaur can make 8 possible moves
+		// [0][1][2]
+		// [3][D][4]
+		// [5][6][7]
+		int movement = temp.getMovement(); // the amount of steps a dinosaur can take (for lvl 1 is one step)
+		int newMove = -1;
+		int dinoX = -1;
+		int dinoY = -1;
+		char[][] tempBubble = temp.getBubble().getBubble(); // gets the dinosaur bubble to check possible moves
+		while (movement != 0) { // loops till the amount of a moves a dinosaur can make is 0
+			newMove = rand.nextInt(boardArry.length - 2);
+			if (newMove == 0) { // goes to 0 spot
+				if (validMove(newMove, temp)) { // array location is not out of bounds
+
+					dinoX = temp.getDinoX() - 1;
+					dinoY = temp.getDinoY() - 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+						movement--;
+					}
+				}
+			} else if (newMove == 1) { // goes to 1 spot on so on
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX() - 1;
+					dinoY = temp.getDinoY();
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 2) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX() - 1;
+					dinoY = temp.getDinoY() + 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 3) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX();
+					dinoY = temp.getDinoY() - 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 4) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX();
+					dinoY = temp.getDinoY() + 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 5) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX() + 1;
+					dinoY = temp.getDinoY() - 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 6) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX() + 1;
+					dinoY = temp.getDinoY();
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			} else if (newMove == 7) {
+				if (validMove(newMove, temp)) {
+					dinoX = temp.getDinoX() + 1;
+					dinoY = temp.getDinoY() + 1;
+					if (clearSpot(dinoX, dinoY)) { // if the spot is clear and is within bounds move the dinosaur to new
+													// location
+						board.placeCharBoard(index, dinoX, dinoY, temp.getCharName());
+
+						movement--;
+					}
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * checks the location to see if its is in bounds with the board array
+	 * 
+	 * @param newMove
+	 *            the move location
+	 * @param temp
+	 *            dinosaur that is being moved
+	 * @return boolean true if it is a vaild location
+	 */
+	public boolean validMove(int newMove, Dino temp) {
+		int dinoX = temp.getDinoX();
+		int dinoY = temp.getDinoY();
+		boolean valid = true;
+		if (newMove == 0) {
+			dinoX--;
+			dinoY--;
+		} else if (newMove == 1) {
+			dinoX--;
+		} else if (newMove == 2) {
+			dinoX--;
+			dinoY++;
+		} else if (newMove == 3) {
+			dinoY--;
+		} else if (newMove == 4) {
+			dinoY++;
+		} else if (newMove == 5) {
+			dinoX++;
+			dinoY--;
+		} else if (newMove == 6) {
+			dinoX++;
+		} else if (newMove == 7) {
+			dinoX++;
+			dinoY++;
+		}
+		if (dinoX < 0 || dinoX >= boardArry.length) { // if this is true not vaild
+			valid = false;
+		}
+		if (dinoY < 0 || dinoY >= boardArry[0].length) {
+			valid = false;
+		}
+		return valid;
+	}
+
+	/**
+	 * for displaying ther char array
+	 * 
+	 * @param board
+	 *            char[][] you want to display
+	 */
+	public void display(char[][] board) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				System.out.print(board[i][j] + ", ");
+			}
+			System.out.println();
+		}
+	}
+
+	/**
+	 * @return the board
+	 */
+	public char[][] getBoard() {
+		return boardArry;
+	}
+
+	/**
+	 * @param board
+	 *            the board to set
+	 */
+	public void setBoard(char[][] board) {
+		this.boardArry = board;
+	}
+
+	/**
+	 * @return the dl
+	 */
+	public DinoList getDl() {
+		return dl;
+	}
+
+	/**
+	 * @param dl
+	 *            the dl to set
+	 */
+	public void setDl(DinoList dl) {
+		this.dl = dl;
+	}
+
+}

@@ -1,0 +1,207 @@
+package testing;
+
+import org.junit.Test;
+
+import model.BackEndBoard;
+import model.Board;
+import student.TestCase;
+
+public class BoardTest extends TestCase {
+
+	/**
+	 * This tests that if you add a rock using the addRock method, it will be in the
+	 * appropriate spot
+	 */
+	@Test
+	public void testAddRock() {
+		Board board = new Board();
+		board.addRock(0, 3);
+		char expected = 'R';
+		char actual = board.getBoard()[0][3];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a rock then the rockCounter will increase by one
+	 */
+	@Test
+	public void testRockCounter() {
+		Board board = new Board();
+		board.addRock(0, 3);
+		int expected = 1;
+		int actual = board.getRockCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add rocks then the rockCounter will increase by the
+	 * appropriate amount
+	 */
+	@Test
+	public void testRockCounterMultiple() {
+		Board board = new Board();
+		board.addRock(0, 3);
+		board.addRock(5, 6);
+		board.addRock(3, 4);
+		board.addRock(4, 8);
+		int expected = 4;
+		int actual = board.getRockCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add rocks then the rockCounter will increase by the
+	 * appropriate amount
+	 */
+	@Test
+	public void testRockCounterMultipleOneWrong() {
+		Board board = new Board();
+		board.addRock(0, 3);
+		board.addRock(0, 3);// should not increase rock counter bc that spot would not be clear
+		board.addRock(5, 6);
+		board.addRock(3, 4);
+		int expected = 3;
+		int actual = board.getRockCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a rock then the rockCounter will increase by one
+	 */
+	@Test
+	public void testRockCounterPresetCounter() {
+		Board board = new Board();
+		board.setRockCounter(10);
+		board.addRock(4, 5);
+		int expected = 11;
+		int actual = board.getRockCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a tree using the addTree method, it will be in the
+	 * appropriate spot
+	 */
+	@Test
+	public void testAddTree() {
+		Board board = new Board();
+		board.addTree(4, 8);
+		char expected = 'T';
+		char actual = board.getBoard()[4][8];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a tree then the treeCounter will increase by one
+	 */
+	@Test
+	public void testTreeCounter() {
+		Board board = new Board();
+		board.addTree(1, 5);
+		int expected = 1;
+		int actual = board.getTreeCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add trees then the treeCounter will increase by the
+	 * appropriate amount
+	 */
+	@Test
+	public void testTreeCounterMultiple() {
+		Board board = new Board();
+		board.addTree(1, 5);
+		board.addTree(4, 3);
+		board.addTree(1, 9);
+		board.addTree(0, 16);
+		int expected = 4;
+		int actual = board.getTreeCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add rocks then the treeCounter will increase by the
+	 * appropriate amount
+	 */
+	@Test
+	public void testTreeCounterMultipleOneWrong() {
+		Board board = new Board();
+		board.addTree(0, 5);
+		board.addTree(0, 5);// should not increase tree counter bc that spot would not be clear
+		board.addTree(0, 6);
+		board.addTree(8, 4);
+		board.addTree(8, 1);
+		int expected = 4;
+		int actual = board.getTreeCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a tree then the treeCounter will increase by one
+	 */
+	@Test
+	public void testTreeCounterPresetCounter() {
+		Board board = new Board();
+		board.setTreeCounter(25);
+		board.addTree(8, 5);
+		int expected = 26;
+		int actual = board.getTreeCounter();
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a exit using the addExit method, it will be in the
+	 * appropriate spot
+	 */
+	@Test
+	public void testAddExit() {
+		Board board = new Board();
+		board.addExit(1, 5);
+		char expected = 'E';
+		char actual = board.getBoard()[1][5];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add an egg using the addEgg method, it will be in the
+	 * appropriate spot
+	 */
+	@Test
+	public void testAddEgg() {
+		Board board = new Board();
+		board.addEgg(7, 4);
+		char expected = 'P';
+		char actual = board.getBoard()[7][4];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that if you add a rock in a spot, it will not be considered clear
+	 */
+	@Test
+	public void testClearFalse() {
+		Board board = new Board();
+		board.addRock(3, 9);
+		assertFalse(board.clearSpot(3, 9));
+	}
+
+	/**
+	 * This tests that if you don't add anything to a spot, it will be considered
+	 * clear
+	 */
+	@Test
+	public void testClearTrue() {
+		Board board = new Board();
+		assertTrue(board.clearSpot(8, 7));
+	}
+
+	/**
+	 * This tests that the spot that will later have a human is considered clear bc
+	 * a human has not been added yet
+	 */
+	@Test
+	public void testClearTrueHuman() {
+		Board board = new Board();
+		assertTrue(board.clearSpot(9, 0));
+	}
+}

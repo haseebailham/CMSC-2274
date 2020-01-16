@@ -1,0 +1,780 @@
+package edu.ben.tests;
+
+import org.junit.Test;
+
+import edu.ben.human.Riddles3;
+import student.TestCase;
+
+/**
+ * This is the Riddles3 test class
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class Riddles3Test extends TestCase {
+
+	/**
+	 * This test makes sure that if the answer is totally wrong for the keyboard
+	 * riddle, it will correctly count as false
+	 */
+	@Test
+	public void testKeyboardWrong() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "dooR";
+		assertFalse(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the keyboard riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testKeyboardRight1() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "a KEYboard";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the keyboard riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testKeyboardRight2() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "KEYboARd";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the keyboard riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testKeyboardRight3() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "THE KeYboARd";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the keyboard riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testKeyboardRight4() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "my keYbOARd";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the keyboard riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testKeyboardRight5() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have keys but no locks. I have a space but no room. You can enter, but can't go outside. What am I?";
+		String playerAnswer = "YOUr KeYboARd";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if the answer is totally wrong for the coin riddle,
+	 * it will correctly count as false
+	 */
+	@Test
+	public void testCoinWrong() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "idk";
+		assertFalse(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight1() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "a COIn";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight2() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "COIn";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight3() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "your Coin";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight4() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "my COin";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight5() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "the COiN";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight6() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "a Penny";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight7() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "PENny";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight8() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "your PennY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight9() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "MY penNY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight10() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "The PENny";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight11() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "a QUArter";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight12() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "quarTER";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight13() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "youR QUarter";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight14() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "MY quarter";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight15() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "THE quARTER";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight16() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "A nickEL";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight17() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "NICKEl";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight18() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "YOUR nickeL";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight19() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "my NickeL";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight20() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "THe NIckeL";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight21() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "a DimE";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight22() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "diME";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight23() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "Your DimE";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight24() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "My DiME";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the coin riddle is marked as one of
+	 * the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testCoinRight25() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "I have a head and tail but no body. What am I?";
+		String playerAnswer = "THE DIMe";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if the answer is totally wrong for the dictionary
+	 * riddle, it will correctly count as false
+	 */
+	@Test
+	public void testDictionaryWrong() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "booK";
+		assertFalse(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight1() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "DICTIONary";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight2() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "a DicTIONary";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight3() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "THe DiCtionarY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRigh4() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "YOUr DIctionARy";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight5() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "mY dictionaRY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight6() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "in THE dictionaRY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight7() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "in A dictionAry";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight8() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "IN THe dictIONARY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight9() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "in youR DictionARY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the dictionary riddle is marked as
+	 * one of the correct answers, it will be appropriately marked as correct (even
+	 * with random capitalization)
+	 */
+	@Test
+	public void testDictionaryRight10() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "Yesterday comes before today and tomorrow everywhere in the world, except this place.  Where am I?";
+		String playerAnswer = "in MY DICTIONary";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if the answer is totally wrong for the shadow
+	 * riddle, it will correctly count as false
+	 */
+	@Test
+	public void testShadowWrong() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "mooN";
+		assertFalse(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight1() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "SHadows";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight2() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "shadoW";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight3() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "my ShadOW";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight4() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "my shadowS";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight5() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "your shadoW";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight6() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "your SHadowS";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight7() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "the Shadow";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight8() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "the ShadoWs";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the shadow riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testShadowRight9() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "They are dark, and always on the run. Without the sun, there would be none. What are they?";
+		String playerAnswer = "A SHADOw";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if the answer is totally wrong for the friday
+	 * riddle, it will correctly count as false
+	 */
+	@Test
+	public void testFridayWrong() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "If Friday the horse goes into the park at 7:00 and on Sunday the horse goes into the park at 8:00, what is the horse's name?";
+		String playerAnswer = "horSE";
+		assertFalse(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+
+	/**
+	 * This test makes sure that if an answer to the friday riddle is marked as one
+	 * of the correct answers, it will be appropriately marked as correct (even with
+	 * random capitalization)
+	 */
+	@Test
+	public void testFridayRight() {
+		Riddles3 r = new Riddles3();
+		r.riddlesList();
+		String riddle = "If Friday the horse goes into the park at 7:00 and on Sunday the horse goes into the park at 8:00, what is the horse's name?";
+		String playerAnswer = "FridaY";
+		assertTrue(r.correctRiddleAnswer(riddle, playerAnswer));
+	}
+}

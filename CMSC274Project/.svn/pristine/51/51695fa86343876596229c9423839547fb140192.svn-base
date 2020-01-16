@@ -1,0 +1,10 @@
+package model;
+
+public class Level3 implements Level {
+
+	@Override
+	public void playLevel() {
+		
+	}
+
+}

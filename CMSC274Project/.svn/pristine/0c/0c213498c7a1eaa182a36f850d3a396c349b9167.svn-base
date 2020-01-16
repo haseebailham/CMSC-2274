@@ -1,0 +1,93 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.human.HumanBubble;
+import edu.ben.human.Pathing;
+
+public class PathingTest {
+
+	@Test
+	/**
+	 * test a basic 3x3 grid
+	 */
+	public void test3x3() {
+		boolean[][] board = new boolean[3][3];
+		HumanBubble bubb = new HumanBubble(1);
+		// char[][] bubble = bubb.makeBubble(board, 1, 2);
+
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (!board[i][j]) {
+					board[i][j] = true;
+				}
+			}
+		}
+		board[1][1] = false;
+		board[1][2] = false;
+
+		Pathing move = new Pathing(board, 0, 0, 2, 2);
+		boolean actual = move.findPath();
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * test a basic 4x4 grid
+	 */
+	public void test4x4() {
+		boolean[][] board = new boolean[4][4];
+		HumanBubble bubb = new HumanBubble(1);
+		// char[][] bubble = bubb.makeBubble(board, 1, 2);
+
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (!board[i][j]) {
+					board[i][j] = true;
+				}
+			}
+		}
+		board[2][0] = false;
+		board[2][1] = false;
+		board[2][2] = false;
+
+		Pathing move = new Pathing(board, 3, 0, 1, 2);
+		boolean actual = move.findPath();
+		assertTrue(actual);
+	}
+
+	@Test
+	/**
+	 * test first level 1 human start invaild move
+	 */
+	public void testHumanlvl1False() {
+
+		HumanBubble bubb = new HumanBubble(1);
+		BackEndBoard backEnd = new BackEndBoard(1);
+		backEnd.display(backEnd.getBoard());
+		boolean[][] test = bubb.changeTypeBoard(bubb.makeBubble(backEnd.getBoard(), 9, 0)); // human is at 6,6
+		Pathing move = new Pathing(test, 6, 6, 1, 6);
+		boolean actual = move.findPath();
+		assertFalse(actual);
+	}
+
+	@Test
+	/**
+	 * test first level 1 human start under MAX_MOVES
+	 */
+	public void testHumanlvl1True() {
+		HumanBubble bubb = new HumanBubble(1);
+		BackEndBoard backEnd = new BackEndBoard(1);
+		backEnd.display(backEnd.getBoard());
+		boolean[][] test = bubb.changeTypeBoard(bubb.makeBubble(backEnd.getBoard(), 9, 0)); // human is at 6,6 (center
+																							// of bubble
+
+		Pathing move = new Pathing(test, 6, 6, 3, 8);
+		boolean actual = move.findPath();
+		assertTrue(actual);
+	}
+}

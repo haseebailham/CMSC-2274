@@ -1,0 +1,107 @@
+package edu.ben.model;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Stores all scores from previously played games.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class ScoresHistory {
+
+	/**
+	 * Scores list, contains all scores from previous plays.
+	 */
+	private static List<Integer> scores;
+
+	/**
+	 * String file name
+	 */
+	private String fileName;
+
+	private static File file = new File("scores.txt");
+
+	/**
+	 * ScoresHistory class constructor, initializes scores list.
+	 */
+	public ScoresHistory(List<Integer> scores) {
+		ScoresHistory.scores = scores;
+	}
+
+	// Write to history the new score.
+	/**
+	 * Writes to file
+	 * 
+	 * @param points
+	 *            Number of points, which is the score that will be written
+	 */
+	public void writeToFile(List<Integer> scores) {
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file);
+			for (int i = 0; i < scores.size(); i++) {
+				fw.write(String.valueOf(scores.get(i))+"\n");
+			}
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("File doesn't work");
+		}
+	}
+
+	/**
+	 * Adds new score to list
+	 * 
+	 * @param score
+	 *            Integer value of points.
+	 */
+	public void addNewScore() {
+		writeToFile(scores);
+	}
+
+	// /**
+	// * Checks if value of score already exists in list.
+	// *
+	// * @param score
+	// * Integer value of score
+	// * @return True - if score is in list False - if it is a new score
+	// */
+	// public boolean exists(int score) {
+	// return scores.contains(score);
+	// }
+
+	/**
+	 * Gets scores
+	 * 
+	 * @return List<Integer> which stores all the scores.
+	 */
+	public List<Integer> getScores() {
+		return scores;
+	}
+
+	/**
+	 * Sets scores
+	 * 
+	 * @param scores
+	 *            Scores of List<Integer> type.
+	 */
+	public void setScores(List<Integer> scores) {
+		this.scores = scores;
+	}
+
+	/**
+	 * Gets file name.
+	 * 
+	 * @return String representation of the file name
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+}

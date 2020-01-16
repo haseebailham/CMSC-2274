@@ -1,0 +1,343 @@
+package edu.ben.dino;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import edu.ben.model.Bubble;
+
+/**
+ * superclass for dinosaur classes
+ * 
+ * @author abdul
+ *
+ */
+public abstract class Dino {
+	private String dinoName;
+	private int dinoDmg;
+	private int movement = 0;
+	private String dinoDisplay;
+	private int level;
+	private Bubble bubble = new Bubble(level);
+	private int dinoX; // Coordinate of dino
+	private int dinoY;
+	private int[] prevLocation = new int[2];
+	private char charName = 'D'; // dinosaur char name changes per subclass
+	private boolean foundHuman = false;
+	private boolean nearHuman = false;
+	public Dino() {
+
+	}
+	private int extra = 0;
+	/**
+	 * @return the dinoName
+	 */
+	public String getDinoName() {
+		return dinoName;
+	}
+
+	/**
+	 * @param dinoName
+	 *            the dinoName to set
+	 */
+	public void setDinoName(String dinoName) {
+		this.dinoName = dinoName;
+	}
+
+	/**
+	 * @return the dinoDmg
+	 */
+	public int getDinoDmg() {
+		return dinoDmg;
+	}
+
+	/**
+	 * @param dinoDmg
+	 *            the dinoDmg to set
+	 */
+	public void setDinoDmg(int dinoDmg) {
+		this.dinoDmg = dinoDmg;
+	}
+
+	/**
+	 * @return the dinoDisplay
+	 */
+	public String getDinoDisplay() {
+		return dinoDisplay;
+	}
+
+	/**
+	 * @param dinoDisplay
+	 *            the dinoDisplay to set
+	 */
+	public void setDinoDisplay(String dinoDisplay) {
+		this.dinoDisplay = dinoDisplay;
+	}
+
+	/**
+	 * @return the movement
+	 */
+	public int getMovement() {
+		return movement;
+	}
+
+	/**
+	 * @param movement
+	 *            the movement to set
+	 */
+	public void setMovement(int movement) {
+		this.movement = movement;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Dino [dinoName=" + dinoName + ", dinoDmg=" + dinoDmg + ", movement=" + movement + ", dinoDisplay="
+				+ dinoDisplay + ", level=" + level + ", bubble=" + bubble + ", dinoX=" + dinoX + ", dinoY=" + dinoY
+				+ "]";
+	}
+
+	/**
+	 * generates a char[][] which is a bubble around the dino
+	 * 
+	 * @return the bubble
+	 */
+	public Bubble makeBubble(char[][] board) {
+		bubble.setBubble(bubble.makeBubble(board, dinoX, dinoY));
+		return bubble;
+	}
+
+	/**
+	 * method used to move dinosaur on the board, if dinosaur has found a human they
+	 * path to human for the amount of movement they are allowed
+	 * 
+	 * @param board
+	 *            char[][] board in which a bubble gets made based from dinosaurs
+	 *            current pos
+	 * @param humanX
+	 *            row
+	 * @param humanY
+	 *            column
+	 * @return An ArrayList that contains int array, that hold the path to take to
+	 *         reach human but on has a size based from dinosaurs movement if a
+	 *         dinosaur has 2 movement it will contain to indexs only
+	 */
+	public ArrayList<int[]> moveDinosaur(char[][] board, int humanX, int humanY) {
+
+		makeBubble(board);
+		if (foundHuman) {
+			//int[] humanPos = { humanX, humanY };
+			DinosaurPathing path = new DinosaurPathing(board, humanX, humanY, this); // path
+			ArrayList<int[]> paths = path.findPath();
+			if (paths.size() == 1) {
+				return moveRandomly(board, movement - 1);
+			} else if ((paths.get(0)[0] == humanX && paths.get(0)[1] == humanY)) {
+				paths.remove(0);
+				return paths;
+			}
+
+			return paths;
+			// to
+			// human
+
+		} else { // move randomly
+			return moveRandomly(board, movement);
+		}
+	}
+
+	/**
+	 * method for dinosaur to move randmonly based off movement amount
+	 * 
+	 * @param board
+	 *            char[][] board array
+	 * @return ArrayList that contains end location
+	 */
+	public ArrayList<int[]> moveRandomly(char[][] board, int movement) {
+		ArrayList<int[]> paths = new ArrayList<int[]>();
+		boolean valid = false;
+		Random rand = new Random();
+		int[] pos = new int[2];
+		while (!valid) {
+			boolean inBound = true;
+			int newMove = rand.nextInt(8);
+			int tempX = dinoX;
+			int tempY = dinoY;
+
+			if (newMove == 0) {
+				tempX -= movement;
+				tempY -= movement;
+			} else if (newMove == 1) {
+				tempX -= movement;
+			} else if (newMove == 2) {
+				tempX -= movement;
+				tempY += movement;
+			} else if (newMove == 3) {
+				tempY -= movement;
+			} else if (newMove == 4) {
+				tempY += movement;
+			} else if (newMove == 5) {
+				tempX += movement;
+				tempY -= movement;
+			} else if (newMove == 6) {
+				tempX += movement;
+			} else if (newMove == 7) {
+				tempX += movement;
+				tempY += movement;
+			}
+			if (tempX < 0 || tempX >= board.length) { // X in bounds
+				inBound = false;
+			}
+			if (tempY < 0 || tempY >= board[0].length) { // Y in bounds
+				inBound = false;
+			}
+			if (inBound && board[tempX][tempY] == 0) { // in bounds and empty spot
+				// board.placeCharBoard(index, dinoX, dinoY, CharName); <- move
+				pos[0] = tempX;
+				pos[1] = tempY;
+				paths.add(pos); // end
+				valid = true;
+			}
+
+		}
+		return paths;
+	}
+
+	public boolean checkForHuman() {
+
+		return bubble.checkBubbleForHuman();
+	}
+
+	/**
+	 * @return the nearHuman
+	 */
+	public boolean isNearHuman() {
+		return nearHuman;
+	}
+
+	/**
+	 * @param nearHuman the nearHuman to set
+	 */
+	public void setNearHuman(boolean nearHuman) {
+		this.nearHuman = nearHuman;
+	}
+
+	/**
+	 * gets the bubble
+	 * 
+	 * @return the bubble
+	 */
+	public Bubble getBubble() {
+		return bubble;
+	}
+
+	/**
+	 * @param bubble
+	 *            the bubble to set
+	 */
+	public void setBubble(Bubble bubble) {
+		this.bubble = bubble;
+	}
+
+	/**
+	 * @return the dinoX
+	 */
+	public int getDinoX() {
+		return dinoX;
+	}
+
+	/**
+	 * @param dinoX
+	 *            the dinoX to set
+	 */
+	public void setDinoX(int dinoX) {
+		this.dinoX = dinoX;
+	}
+
+	/**
+	 * @return the dinoY
+	 */
+	public int getDinoY() {
+		return dinoY;
+	}
+
+	/**
+	 * @return the charName
+	 */
+	public char getCharName() {
+		return charName;
+	}
+
+	/**
+	 * @param charName
+	 *            the charName to set
+	 */
+	public void setCharName(char charName) {
+		this.charName = charName;
+	}
+
+	/**
+	 * @param dinoY
+	 *            the dinoY to set
+	 */
+	public void setDinoY(int dinoY) {
+		this.dinoY = dinoY;
+	}
+
+	/**
+	 * @return the prevLocation
+	 */
+	public int[] getPrevLocation() {
+		return prevLocation;
+	}
+
+	/**
+	 * @param prevLocation
+	 *            the prevLocation to set (with x and y)
+	 */
+	public void setPrevLocation(int x, int y) {
+		prevLocation[0] = x;
+		prevLocation[1] = y;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the foundHuman
+	 */
+	public boolean isFoundHuman() {
+		return foundHuman;
+	}
+
+	/**
+	 * @param foundHuman
+	 *            the foundHuman to set
+	 */
+	public void setFoundHuman(boolean foundHuman) {
+		this.foundHuman = foundHuman;
+	}
+
+	/**
+	 * @param prevLocation
+	 *            the prevLocation to set
+	 */
+	public void setPrevLocation(int[] prevLocation) {
+		this.prevLocation = prevLocation;
+	}
+
+}

@@ -1,0 +1,578 @@
+package model;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+
+/**
+ * Button Listener for Level1. Implements Action Listener, and is used for each
+ * button in Lvl1GUI. Action performed method performs tasks when button is
+ * clicked by user in the GUI.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+// should change this class and constructor so that it can work for level 1 and
+// 2 bc they are similar
+public class ButtonListener implements ActionListener {
+	// Button listener for board level 1 GUI
+
+	// update dinosaur board
+	// player clicked position:
+
+	public static final int HEALTH_YELLOW = 60;
+
+	public static final int HEALTH_RED = 35;
+
+	/**
+	 * Position x, current position of player x.
+	 */
+	private int posX;
+
+	/**
+	 * Position y, current position of player y.
+	 */
+	private int posY;
+
+	/**
+	 * JButton[][] buttons, GUI.
+	 */
+	private JButton[][] btns;
+
+	/**
+	 * class uses to call Board
+	 */
+	private BackEndBoard backEnd;
+	/**
+	 * Human class
+	 */
+	private Human human;
+
+	/**
+	 * current board
+	 */
+	private char[][] board;
+
+	private boolean lvlOver = false;
+
+	/**
+	 * 
+	 * JProgress Bar for Health.
+	 */
+	private JProgressBar progressBar;
+	/**
+	 * game object
+	 */
+	private DinosaurGame game;
+	/**
+	 * dinosaur list
+	 */
+	private DinoList dl;
+
+	private int level = 0;
+
+	private Messages m = new Messages();
+
+	/**
+	 * Public constructor for ButtonListenerLevel1 class.
+	 * 
+	 * @param lvl
+	 *            Level 1
+	 * @param posX
+	 *            Position x
+	 * @param posY
+	 *            Position y
+	 * @param btns
+	 *            buttons
+	 */
+	public ButtonListener(DinosaurGame game, int posX, int posY, JButton[][] btns, JProgressBar progressBar) {
+		this.posX = posX;
+		this.posY = posY;
+		this.btns = btns;
+		this.game = game;
+		this.backEnd = game.getBoard();
+		this.human = backEnd.getHuman();
+		this.board = backEnd.getBoard();
+		this.progressBar = progressBar;
+		this.dl = backEnd.getDl();
+		level = game.getLevel();
+	}
+
+	/**
+	 * Action performed method from ActionListener interface.
+	 * 
+	 * @param e
+	 *            event passed in, which is the button clicked by user in GUI.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// issues : if player did invalid move, still penalized. if invalid move, no penalty.
+
+		if (e.getActionCommand().equals("quit")) {
+			game.quitGame();
+			game.setLevel(0);
+			game.setLevel(game);
+		} else {
+			// if button is clicked, then this happens:
+			// backEnd.displayBoard();
+			dl.makeBubbles(board);
+			// System.out.println(human.getCurrentPoints());
+			//			if (human.getHealth().getHealthBar() != 0) {
+			if (isDinosaurZone()) {
+				// add bubble counter
+				// if (level == 1) {
+				// human.getHealth().changeHealth("herbivore");
+				//
+				// } else if (level == 2) {
+				// human.getHealth().changeHealth("carnivore");
+				// } else if (level == 3) {
+				// human.getHealth().changeHealth("trex");
+				// }
+				updateHealth(level);
+				// progressBar.setValue(human.getHealth().getHealthBar());
+				dinosaurDamageMessage();
+			}
+			human.setTarget(posX, posY);
+			// checks if player clicked on valid button
+			if (human.moveHuman()) {
+				// if human is stuck
+				if (human.isStuck()) { // if the human is stuck
+					HumanStuckMessage();
+					game.closeFrame();
+					// if human clicked on tree
+				} else if (isTree()) {
+					handleRiddle(level);
+					// if human died
+					if (checkIfHumanDied(human.getHealth().getHealthBar())) {
+						lostGameMessage();
+						game.closeFrame();
+					}
+					// if human clicked on exit button
+				} else if (isExit()) {
+					moveHuman();
+					passLevel();
+					// game.setLvlOver(true);
+					game.closeFrame();
+					game.nextLevel();
+					// lvl.closeFrame();
+				} else {
+					moveHuman();
+					if (checkIfHumanDied(human.getHealth().getHealthBar())) {
+						lostGameMessage();
+						game.closeFrame();
+					} 
+				}
+
+
+			} else { // no path
+				invalidMove();
+			}
+			//			} else { // human lost all health
+			//				lostGameMessage();
+			//				game.closeFrame();
+			//			}
+		}
+		//		}
+	}
+
+	/*
+	 * only updateButton() if move is valid (game object handles by collaborating
+	 * with the rest of the objects. update button on GUI with human picture, set
+	 * image icon (human pic).
+	 */
+	/**
+	 * Updates GUI button.
+	 * 
+	 * @param btns
+	 *            Buttons from GUI
+	 */
+	public void updateButton(JButton[][] btns) {
+		if (btns[posX][posY].getBackground().equals(Color.DARK_GRAY)) {
+			final ImageIcon human = new ImageIcon("runningHuman.png");
+			btns[posX][posY].setIcon(human);
+		} else if (game.getLevel() == 3) {
+			final ImageIcon human = new ImageIcon("humanGround.PNG");
+			btns[posX][posY].setIcon(human);
+		} else {
+			final ImageIcon human = new ImageIcon("humanGrass.PNG");
+			btns[posX][posY].setIcon(human);
+		}
+	}
+
+	/**
+	 * Removes icon from GUI, and removes previous position clicked by player.
+	 * 
+	 * @param btns
+	 *            Buttons in frame of Lvl1GUI.
+	 */
+	public void removeIcon(JButton[][] btns) {
+		/*
+		 * removes prev player position, and removes icon. and updates board with the
+		 * new character position.
+		 */
+
+		// get position from level1 object:
+		int[] prev = human.removePrevPosition();
+		/* If the player is on level 3, then the background is rocky not grassy */
+		if (game.getLevel() == 3) {
+			ImageIcon ground = new ImageIcon("ground.jpg");
+			btns[prev[0]][prev[1]].setIcon(ground);
+			backEnd.removeIndex(prev);
+		} else {
+			// button's icon is back to grass
+			ImageIcon grass = new ImageIcon("grass.jpg");
+			btns[prev[0]][prev[1]].setIcon(grass);
+			backEnd.removeIndex(prev);
+		}
+		// update back end board human char
+		// backEnd.placeCharBoard(prev[0], prev[1], ' ');
+	}
+
+	// still need to figure out how to throw error message, and only allow human
+	// movement
+	// clicked position if it is clear or void of any component.
+	/**
+	 * Is button clear, check dinosaur board object if there are any character in
+	 * the position.
+	 * 
+	 * @return true if it is clear, false if not.
+	 */
+	public boolean isClear() {
+		// if button is clear, return true.
+		// if (btns[posX][posY].)
+		return backEnd.clearSpot(posX, posY);
+	}
+
+	/**
+	 * Checks if the button clicked on has a tree
+	 * 
+	 * @return true if the button has a tree
+	 */
+	public boolean isTree() {
+		if (board[posX][posY] == 'T') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if player clicked in a dinosaur zone.
+	 * 
+	 * @return true if in a dinosaur zone.
+	 */
+	public boolean isDinosaurZone() {
+		boolean foundHuman = false;
+		for (int i = 0; i < dl.getSize(); i++) {
+			if (dl.checkForHuman(i)) {
+				return true;
+			}
+
+		}
+
+		return foundHuman;
+	}
+
+	/**
+	 * This method checks if the button clicked was part of the exit
+	 * 
+	 * @return true if the button was an exit button
+	 */
+	public boolean isExit() {
+		if (board[posX][posY] == 'E') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * This method goes through the steps to move the human to its new spot, and
+	 * uses other methods to help it. It also lets the dinosaurs move after the
+	 * human has moved
+	 */
+	public void moveHuman() {
+		if (game.getLevel() == 2) {
+			pterodactyl();
+		}
+		/*
+		 * call method from level 1 which uses DinosaurBoard object and MovementLevel1
+		 * class to check for validity for movement to target (button clicked)
+		 */
+		removeIcon(btns);
+		// (UPDATES BOARD) (then change posX, posY values and update Button)
+		backEnd.placeCharBoard(posX, posY, 'H');
+		// (UPDATES BUTTON IMAGE) add new position to queue
+		updateButton(btns);
+		
+		moveDinosaurs();
+		// (ADDS NEW HUMAN POSITION TO LEVEL1) add new position to level1 queue.
+		// human.addNewPosition(posX, posY);
+
+		// move dinosaurs after human moves.
+		// need if check for if an egg was picked up
+		human.setCurrentPoints(human.getPoints().calculatePoints(human.getCurrentPoints(), false));
+		/*
+		 * if (mvmt.appropriateSpaces()) { // then check if there is a pathway is valid:
+		 * // then remove human position, and update to new position. // get previous
+		 * posX and posY, remove Icon after player clicked button removeIcon(btns); //
+		 * (UPDATES BOARD) (then change posX, posY values and update Button)
+		 * backEnd.placeCharBoard(posX, posY, 'H'); // (UPDATES BUTTON IMAGE) add new
+		 * position to queue updateButton(btns);
+		 * 
+		 * // (ADDS NEW HUMAN POSITION TO LEVEL1) add new position to level1 queue.
+		 * human.addNewPosition(posX, posY);
+		 * 
+		 * // move dinosaurs after human moves. moveDinosaurs(); }
+		 */
+
+		// if spot is clear
+		// } else {
+		// // open error dialog box, "Sorry, not a valid path."
+		// System.out.println("Wrong path");
+		// }
+		// } else {
+		// // open error dialog box, "Wrong move, please try again."
+		// }
+	}
+
+	/**
+	 * This method moves the dinosaurs around on the board
+	 */
+	public void moveDinosaurs() {
+		// when at exit problem
+		int[] prevDinosaurLoc = new int[2]; // hold prev dinosaurs location
+		int[] newDinosaurLoc = new int[2]; // holds new dinosaurs location
+
+		for (int i = 0; i < dl.getSize(); i++) {
+			// Dino temp = dl.getIndex(i);
+			dl.moveDinosaurs(board, human.getHumanX(), human.getHumanY(), i);
+			char obj = dl.getIndex(i).getCharName();
+			prevDinosaurLoc = dl.getPrevDinosaurLoctaion(i); // gets the location for each dinosaur
+			newDinosaurLoc = dl.getCurrentDinosaurLoctaion(i);
+			backEnd.placeCharBoard(newDinosaurLoc[0], newDinosaurLoc[1], obj);
+			backEnd.removeIndex(prevDinosaurLoc[0], prevDinosaurLoc[1]);
+			updateDinosaurButton(btns, newDinosaurLoc, obj);
+			removeDinosaurIcon(btns, prevDinosaurLoc, i, obj);
+		}
+	}
+
+	/**
+	 * Removes dinosaur icon.
+	 * 
+	 * @param btns
+	 *            buttons
+	 * @param prev
+	 *            previous button the dinosaur was on
+	 * @param index
+	 *            index
+	 * @param obj
+	 *            character representing the dinosaur on the game board
+	 */
+	public void removeDinosaurIcon(JButton[][] btns, int[] prev, int index, char obj) {
+		if (game.getLevel() == 3) {
+			ImageIcon ground = new ImageIcon("ground.jpg");
+			btns[prev[0]][prev[1]].setIcon(ground);
+		} else {
+			ImageIcon grass = new ImageIcon("grass.jpg");
+			btns[prev[0]][prev[1]].setIcon(grass);
+		}
+
+	}
+
+	/**
+	 * Updates Dinosaur buttons
+	 * 
+	 * @param btns
+	 *            Buttons
+	 * @param newLocation
+	 *            New location
+	 * @param obj
+	 *            Character representing the dinosaur on the game board
+	 */
+	public void updateDinosaurButton(JButton[][] btns, int[] newLocation, char obj) {
+		int x = newLocation[0];
+		int y = newLocation[1];
+		if (obj == 'A') {
+			final ImageIcon ank = new ImageIcon("ankyl.png");
+			btns[x][y].setIcon(ank);
+		} else if (obj == 'B') {
+			final ImageIcon brach = new ImageIcon("brachGrass.PNG");
+			btns[x][y].setIcon(brach);
+		} else if (obj == 'V') {
+			ImageIcon velo = new ImageIcon("velociraptor.jpg");
+			btns[x][y].setIcon(velo);
+		} else if (obj == 'X') {
+			ImageIcon trex = new ImageIcon("trex3.PNG");
+			btns[x][y].setIcon(trex);
+		}
+	}
+
+	public void progressBarHealth() {
+		if (human.getHealth().getHealthBar() < 50) {
+
+		}
+	}
+
+	/**
+	 * This method shows the riddle the user needs to answer
+	 * 
+	 * @param riddle
+	 *            the riddle that needs to be answered
+	 * @return the answer that the user gave
+	 */
+	public String treeRiddle(String riddle) {
+		String answer = m.showRiddle(riddle);
+		return answer;
+	}
+
+	/**
+	 * This method determines if the answer the user gave was correct
+	 * 
+	 * @param correct
+	 *            whether or not the answer was correct
+	 */
+	public void treeAnswer(boolean correct) {
+		m.respondRiddle(correct);
+	}
+
+	public void dinosaurDamage() {
+
+	}
+
+	/**
+	 * This method displays a message to the user so they know they have passed this
+	 * level
+	 * 
+	 * @param pass
+	 *            whether or not the user passed the level
+	 */
+	public void passLevel() {
+		if (game.getLevel() == 3) {
+			m.escapeIsland();
+		} else {
+			m.escapeLevel();
+		}
+		// game.setLevel(game.getLevel() + 1);
+	}
+
+	/**
+	 * This method will display a message if the player clicked on a square that
+	 * they are not able to get to
+	 */
+	public void invalidMove() {
+		m.invalidMessage();
+	}
+
+	/**
+	 * This method displays the messsage if the player lost the game
+	 */
+	public void lostGameMessage() {
+		m.lostGameMessage();
+	}
+
+	/**
+	 * This method displays the messsage if the player lost the game
+	 */
+	public void HumanStuckMessage() {
+		m.humanTrappedMessage();
+	}
+
+	/**
+	 * This method displays a message to the player if dinosaur damage was inflicted
+	 * because human was in their zone.
+	 */
+	public void dinosaurDamageMessage() {
+		if (game.getLevel() == 1) {
+			m.herbMessage();
+		} else if (game.getLevel() == 2) {
+			m.veloMessage();
+		} else if (game.getLevel() == 3) {
+			m.rexMessage();
+		}
+	}
+
+	/**
+	 * This method will periodically send a pterodactyl towards the human
+	 */
+	public void pterodactyl() {
+		if (m.pterodactlyMessage()) {
+			human.getHealth().changeHealth("pterodactyl");
+		}
+	}
+
+	/**
+	 * This method will change the health of the human depending on which dinosaur
+	 * is around them
+	 * 
+	 * @param level
+	 *            the level that the player is currently on
+	 */
+	public void updateHealth(int level) {
+		if (level == 1) {
+			human.getHealth().changeHealth("herbivore");
+		} else if (level == 2) {
+			human.getHealth().changeHealth("carnivore");
+		} else if (level == 3) {
+			human.getHealth().changeHealth("trex");
+		}
+
+		int health = human.getHealth().getHealthBar();
+
+		if (health < HEALTH_YELLOW && health > HEALTH_RED) {
+			progressBar.setForeground(Color.YELLOW);
+		} else if (health < HEALTH_RED) {
+			progressBar.setForeground(Color.RED);
+		} else if (health > HEALTH_YELLOW) {
+			progressBar.setForeground(Color.BLUE);
+		}
+		progressBar.setValue(human.getHealth().getHealthBar());
+	}
+
+	/**
+	 * This method will display the riddle to the player and decide if the asnwer
+	 * given was correct
+	 * 
+	 * @param level
+	 *            the level that the player is currently on
+	 */
+	public void handleRiddle(int level) {
+		boolean correct;
+		if (level == 1) {
+			String riddle = human.getHealth().getR().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR().correctRiddleAnswer(riddle, playerAnswer);
+		} else if (level == 2) {
+			String riddle = human.getHealth().getR2().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR2().correctRiddleAnswer(riddle, playerAnswer);
+		} else {
+			String riddle = human.getHealth().getR3().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR3().correctRiddleAnswer(riddle, playerAnswer);
+		}
+		treeAnswer(correct);
+		if (correct) {
+			human.getHealth().changeHealth("fruit");
+			human.setTarget(posX, posY);
+			moveHuman();
+			progressBar.setValue(human.getHealth().getHealthBar());
+		} else {
+			board[posX][posY] = '\u0000';
+			ImageIcon grass = new ImageIcon("grass.jpg");
+			btns[posX][posY].setIcon(grass);
+		}
+	}
+
+	public boolean checkIfHumanDied(int health) {
+		return health == 0;
+	}
+
+}

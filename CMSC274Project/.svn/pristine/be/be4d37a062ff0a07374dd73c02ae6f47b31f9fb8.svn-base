@@ -1,0 +1,265 @@
+package visual;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+import model.BackEndBoard;
+import model.ButtonListenerLevel1;
+import model.Level1;
+
+public class LevelOneGUI extends JFrame {
+
+	/**
+	 * Board size global variable.
+	 */
+	private final int BOARD_ROW = 10;
+
+	private final int BOARD_COL = 17;
+
+	/**
+	 * Serial version UID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Content pane.
+	 */
+	private JPanel contentPane;
+
+	/**
+	 * Start of health value.
+	 */
+	private int healthValue = 100;
+
+	/**
+	 * Button for grid, 10 x 10.
+	 */
+	final JButton[][] btns = new JButton[BOARD_ROW][BOARD_COL];
+
+	/**
+	 * Human x position.
+	 */
+	public int humanX = 9;
+
+	/**
+	 * Human y position.
+	 */
+	public int humanY = 0;
+
+	public JProgressBar progressBar;
+
+	private LinkedList<JButton> rocks = new LinkedList<JButton>();
+	private LinkedList<JButton> trees = new LinkedList<JButton>();
+
+	/**
+	 * Create the frame.
+	 */
+	public LevelOneGUI() {
+		Level1 lvl = new Level1();
+		BackEndBoard backEnd = new BackEndBoard(1);
+		char[][] board = backEnd.getBoard();
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// setBounds(100, 100, 700, 500);
+		setBounds(500, 20, 40, 40);
+		setSize(new Dimension(1200, 950));
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		// contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		// contentPane.setLayout(new BorderLayout(0, 0));
+
+		contentPane.setBackground(Color.BLACK);
+		contentPane.setLayout(null);
+
+		JPanel gameGridPanel = new JPanel();
+		gameGridPanel.setBounds(6, 6, 1188, 767);
+		gameGridPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		gameGridPanel.setLayout(new BorderLayout(0, 0));
+		gameGridPanel.setLayout(new GridLayout(0, 17, 1, 1));
+		gameGridPanel.setBackground(new Color(0, 0, 0));
+		contentPane.add(gameGridPanel);
+
+		// HEALTH BAR:
+		JPanel healthBarPanel = new JPanel();
+		healthBarPanel.setBackground(new Color(0, 100, 0));
+		healthBarPanel.setBounds(6, 779, 276, 71);
+		contentPane.add(healthBarPanel);
+		healthBarPanel.setLayout(null);
+
+		
+		// Progress bar:
+		progressBar = new JProgressBar(0, 100);
+		progressBar.setBounds(28, 6, 222, 65);
+
+
+		// starting health
+		progressBar.setMaximum(100);
+		progressBar.setValue(healthValue);
+		progressBar.setForeground(Color.WHITE);
+		progressBar.setStringPainted(true);
+
+		healthBarPanel.add(progressBar);
+
+		// makes the whole board filled with grass
+		ImageIcon grass = new ImageIcon("grass.jpg");
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				btns[i][j] = new JButton("");
+				btns[i][j].setIcon(grass);
+				// add action listeners
+				ActionListener actionListener = new ButtonListenerLevel1(lvl, i, j, btns, progressBar);
+				btns[i][j].addActionListener(actionListener);
+				// add(btns[i][j]);
+				gameGridPanel.add(btns[i][j]);
+			}
+		}
+
+		// sets the exit (rightmost column of the board)
+		for (int i = 0; i < BOARD_ROW; i++) {
+			if (board[i][16] == 'E') {
+				btns[i][16].setIcon(null);
+				btns[i][16].setBackground(Color.DARK_GRAY);
+				btns[i][16].setOpaque(true);
+			}
+		}
+		ImageIcon human = new ImageIcon("humanGrass.PNG");
+		btns[humanX][humanY].setIcon(human);
+
+		// places the rocks and trees in the appropriate spots while adding them to the
+		// respective linked lists
+		ImageIcon rock = new ImageIcon("rockOnGrass.png");
+		ImageIcon tree = new ImageIcon("treeGrass.PNG");
+		// the dinosaurs pictures are only temporary, they will be better later
+		ImageIcon ank = new ImageIcon("ankyl.png");
+		ImageIcon brach = new ImageIcon("brachGrass.PNG");
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				if (board[i][j] == 'R') {
+					btns[i][j].setIcon(rock);
+					rocks.add(btns[i][j]);
+				} else if (board[i][j] == 'T') {
+					btns[i][j].setIcon(tree);
+					trees.add(btns[i][j]);
+				} else if (board[i][j] == 'B') {
+					btns[i][j].setIcon(brach);
+				} else if (board[i][j] == 'A') {
+					btns[i][j].setIcon(ank);
+				}
+			}
+		}
+		// makes the rock buttons disabled since the player should not be able to stand
+		// them
+		for (int i = 0; i < rocks.size(); i++) {
+			rocks.get(i).setDisabledIcon(rock);
+			rocks.get(i).setEnabled(false);
+		}
+
+		ImageIcon dino = new ImageIcon("dinosaur.png");
+		ImageIcon island = new ImageIcon("rsz_2islandpic.png");
+		
+		ImageIcon quit = new ImageIcon("quitLevel.png");
+		JButton quitLevelButton = new JButton("");
+		quitLevelButton.setBounds(1043, 785, 157, 81);
+		quitLevelButton.setIcon(quit);
+		quitLevelButton.setContentAreaFilled(false);
+		quitLevelButton.setFocusPainted(false);
+		quitLevelButton.setBorderPainted(false);
+		
+		quitLevelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				SplashScreenGUI frame = new SplashScreenGUI();
+				frame.setVisible(true);
+			}
+		});
+		contentPane.add(quitLevelButton);
+	
+		// weird, moves picture around if this is not there.
+		JLabel something = new JLabel();
+		something.setBounds(0, 0, 1200, 928);
+		contentPane.add(something);
+
+	}
+
+	/**
+	 * This method shows the riddle the user needs to answer
+	 * 
+	 * @param riddle
+	 *            the riddle that needs to be answered
+	 * @return the answer that the user gave
+	 */
+	public String treeRiddle(String riddle) {
+		String answer = JOptionPane.showInputDialog(riddle);
+		return answer;
+	}
+
+	/**
+	 * This method determines if the answer the user gave was correct
+	 * 
+	 * @param correct
+	 *            whether or not the answer was correct
+	 */
+	public void correctTreeAnswer(boolean correct) {
+		if (correct) {
+			JOptionPane.showMessageDialog(null, "You got the riddle right!");
+		}
+	}
+
+	public void incorrectTreeAnswer() {
+		JOptionPane.showMessageDialog(null, "Sorry, incorrect answer.");
+	}
+	/**
+	 * This method displays a message to the user so they know they have passed this
+	 * level
+	 * 
+	 * @param pass
+	 *            whether or not the user passed the level
+	 */
+	public void passLevel() {
+		ImageIcon confetti = new ImageIcon("confetti.png");
+		JFrame box = new JFrame();
+		JOptionPane.showMessageDialog(box,
+				"Congratulations! You escaped the first part of the island! On to the next part...", "You did it!",
+				JOptionPane.INFORMATION_MESSAGE, confetti);
+	}
+
+	/**
+	 * Invalid move messsage to user.
+	 */
+	public void invalidMove() {
+		JOptionPane.showMessageDialog(null, "Not a valid move. Try again...");
+	}
+	
+	/**
+	 * Lost game message
+	 */
+	public void lostGameMessage() {
+		JOptionPane.showMessageDialog(null, "You died...");
+	}
+	
+	/**
+	 * The dinosaur damage because human was in their zone.
+	 */
+	public void dinosaurDamageMessage() {
+		JOptionPane.showMessageDialog(null, "Oh no! The dinosaur got you!");
+	}
+}

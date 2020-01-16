@@ -1,0 +1,144 @@
+package edu.ben.model;
+
+import java.io.*;
+import java.net.URL;
+import javax.sound.sampled.*;
+
+/**
+ * A static class that any class can call which controls the audio heard in the
+ * game
+ * 
+ * @author abdul
+ *
+ */
+public enum Sounds {
+	SPLASH(0), Level1(1), Level2(2);
+	public static enum Volume {
+		MUTE, ON;
+	}
+
+	public static enum SoundState {
+		MENU, LEVEL1, LEVEL2, LEVEL3;
+	}
+
+	public static Volume volume = Volume.ON;
+	public static SoundState state = SoundState.MENU;
+	private static Clip clip;
+	private int level;
+
+	Sounds(int level) {
+		this.level = level;
+
+		/*
+		 * try { File sound = null; if (level == 0) { sound = new
+		 * File("splashScreen.wav");
+		 * 
+		 * } else if (level == 1) { sound = new File("lvl1.wav"); } else if (level == 2)
+		 * { sound = new File("lvl2.wav"); } else if (level == 3) {
+		 * 
+		 * }
+		 * 
+		 * AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(sound);
+		 * clip = AudioSystem.getClip(); clip.open(audioInputStream); } catch
+		 * (UnsupportedAudioFileException e) { e.printStackTrace(); } catch (IOException
+		 * e) { e.printStackTrace(); } catch (LineUnavailableException e) {
+		 * e.printStackTrace(); }
+		 */
+	}
+
+	// Play or Re-play the sound effect from the beginning, by rewinding.
+	public void play() {
+		try {
+			File sound = null;
+			if (level == 0) {
+				sound = new File("splashScreen.wav");
+				state = SoundState.MENU;
+			} else if (level == 1) {
+				sound = new File("lvl1.wav");
+				state = SoundState.LEVEL1;
+			} else if (level == 2) {
+				sound = new File("lvl2.wav");
+				state = SoundState.LEVEL2;
+			} else if (level == 3) {
+				// state = SoundState.MENU;
+
+			}
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(sound);
+			clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+
+		volume = Volume.ON;
+		if (volume != Volume.MUTE) {
+			if (clip.isRunning())
+				clip.stop();
+			clip.setFramePosition(0);
+			clip.start();
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+
+	}
+
+	public void mute() {
+		volume = Volume.MUTE;
+		if (volume == Volume.MUTE) {
+			if (clip.isRunning())
+				clip.stop();
+			clip.setFramePosition(0); // to the beginning
+		}
+	}
+
+	public static void init() {
+		values();
+	}
+
+	public static void start() {
+		clip.setFramePosition(0);
+		clip.start(); // Start playing
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+	}
+
+	public static void off() {
+		clip.stop();
+
+	}
+
+	/**
+	 * @return the clip
+	 */
+	public Clip getClip() {
+		return clip;
+	}
+
+	/**
+	 * @param clip
+	 *            the clip to set
+	 */
+	public void setClip(Clip clip) {
+		this.clip = clip;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+}

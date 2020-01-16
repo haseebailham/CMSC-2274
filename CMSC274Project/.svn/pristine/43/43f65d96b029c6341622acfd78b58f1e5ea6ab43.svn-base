@@ -1,0 +1,19 @@
+package model;
+
+public class Velociraptor extends Dino {
+
+	public Velociraptor() {
+		setDinoDmg(30);
+		setMovement(2);
+		setDinoName("Velociraptor");
+		setCharName('V');
+		setBubble(new Bubble(2));
+		setDinoX(getDinoX());
+		setDinoY(getDinoY());
+		setPrevLocation(getPrevLocation());
+	}
+	
+	
+	
+	
+}

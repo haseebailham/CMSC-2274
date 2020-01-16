@@ -1,0 +1,128 @@
+package model;
+
+/**
+ * Health Bar class, which deals with the health status of the human character
+ * 
+ * @author mraheem
+ * @version 1.0
+ *
+ */
+
+public class HealthBar {
+	final public static int herbivoreDmg = 20;
+	final public static int carnivoreDmg = 30;
+	final public static int tRexDmg = 40;
+	final public static int landscapeDmg = 5;
+	final public static int fruit = 10;
+	final public static int pterodactylDmg = 10;
+	private int healthBar = 100;
+	private Riddles r = new Riddles();
+	private Riddles2 r2 = new Riddles2();
+	private Riddles3 r3 = new Riddles3();
+
+	/**
+	 * HealthBar Constructor
+	 */
+	public HealthBar() {
+	}
+
+	/**
+	 * This method determines how the player's health will be affected, depending on
+	 * what they got hit with/if they ate fruit
+	 */
+	public void changeHealth(String effect) {
+		// if the human gets attacked by a herbivore
+		if (effect.equals("herbivore")) {
+			healthBar -= herbivoreDmg;
+			// if the human gets attacked by a velociraptor (level 2)
+		} else if (effect.equals("carnivore")) {
+			healthBar -= carnivoreDmg;
+			// if the human gets attacked by the T-Rex
+		} else if (effect.equals("trex")) {
+			healthBar -= tRexDmg;
+			// if the human gets hit by a landscape obstacle
+		} else if (effect.equals("landscape")) {
+			healthBar -= landscapeDmg;
+			// if the human answered the riddle correctly and ate the fruit
+		} else if (effect.equals("pterodactyl")) {
+			healthBar -= pterodactylDmg;
+		} else if (effect.equals("fruit")) {
+			// if the health was already 90 or above, the player cannot get higher than 100
+			// for health. If it is below 90, it will simply get 10 more points
+			if (healthBar >= 90) {
+				healthBar = 100;
+			} else {
+				healthBar += fruit;
+			}
+		}
+		if (healthBar < 0) {
+			healthBar = 0;
+		}
+
+	}
+
+	/**
+	 * gets the status of the health bar
+	 * 
+	 * @return healthBar the healthBar
+	 */
+	public int getHealthBar() {
+		return healthBar;
+	}
+
+	/**
+	 * sets the health bar status
+	 * 
+	 * @param healthBar
+	 *            the healthBar to set
+	 */
+	public void setHealthBar(int healthBar) {
+		this.healthBar = healthBar;
+	}
+
+	/**
+	 * @return the r
+	 */
+	public Riddles getR() {
+		return r;
+	}
+
+	/**
+	 * @param r
+	 *            the r to set
+	 */
+	public void setR(Riddles r) {
+		this.r = r;
+	}
+
+	/**
+	 * @return the r2
+	 */
+	public Riddles2 getR2() {
+		return r2;
+	}
+
+	/**
+	 * @param r2
+	 *            the r2 to set
+	 */
+	public void setR2(Riddles2 r2) {
+		this.r2 = r2;
+	}
+
+	/**
+	 * @return the r3
+	 */
+	public Riddles3 getR3() {
+		return r3;
+	}
+
+	/**
+	 * @param r3
+	 *            the r3 to set
+	 */
+	public void setR3(Riddles3 r3) {
+		this.r3 = r3;
+	}
+
+}

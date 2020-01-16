@@ -1,0 +1,178 @@
+package visual;
+
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import model.ButtonListener;
+import model.DinosaurGame;
+
+/**
+ * Level 2 board GUI
+ * 
+ * @author mraheem
+ *
+ */
+public class Lvl2GUI extends DinosaurGameGUI {
+/**
+ * serial ID
+ */
+	private static final long serialVersionUID = 1L;
+/**
+ * Lvl2GUI constructor
+ * @param game DinosaurGame
+ */
+	public Lvl2GUI(DinosaurGame game) {
+		super(game);
+		startActionListener(game);
+		btns = setUpDefaultButtonIcons(game.getBoard().getBoard());
+		addLevelIcons(game.getBoard().getBoard());
+	}
+
+	@Override
+	/**
+	 * action listener for lvl 2
+	 */
+	public void startActionListener(DinosaurGame game) {
+		JPanel gameGridPanel = setUpGameGrid();
+		JPanel healthBarPanel = setUpHealthBar();
+		JButton quitLevelButton = setUpQuitLevelButton();
+		contentPane = setUpContentPane();
+		contentPane.add(gameGridPanel);
+		contentPane.add(healthBarPanel);
+		contentPane.add(quitLevelButton);
+		ActionListener quitGameAction = new ButtonListener(game, 0, 0, btns, progressBar);
+		quitLevelButton.addActionListener(quitGameAction);
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				btns[i][j] = new JButton("");
+				btns[i][j].setIcon(grass);
+				// add action listeners
+				ActionListener actionListener = new ButtonListener(game, i, j, btns, progressBar);
+				btns[i][j].addActionListener(actionListener);
+				// add(btns[i][j]);
+				gameGridPanel.add(btns[i][j]);
+			}
+		}
+	}
+
+	@Override
+	/**
+	 * adds the velociraptor and egg icons
+	 */
+	public void addLevelIcons(char[][] board) {
+		ImageIcon velo = new ImageIcon("velociraptor.jpg"); // will change picture later
+		ImageIcon egg = new ImageIcon("grassEgg.PNG");
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				if (board[i][j] == 'V') {
+					btns[i][j].setIcon(velo);
+				} else if (board[i][j] == 'P') {
+					btns[i][j].setIcon(egg);// will add egg picture
+				}
+			}
+		}
+
+		// weird, moves picture around if this is not there.
+		JLabel something = new JLabel();
+		something.setBounds(0, 0, 1200, 928);
+		contentPane.add(something);
+	}
+
+	/**
+	 * Create the frame.
+	 *//*
+		 * public Lvl2GUI() { setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		 * setBounds(500, 20, 40, 40); setSize(new Dimension(1200, 1000)); contentPane =
+		 * new JPanel(); contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		 * contentPane.setLayout(new BorderLayout(0, 0)); setContentPane(contentPane);
+		 * // changed border gap to 1. contentPane.setLayout(new GridLayout(0, 10, 1,
+		 * 1));
+		 * 
+		 * // set background color: float[] colors = new float[3]; colors =
+		 * Color.RGBtoHSB(102, 51, 0, colors);
+		 * contentPane.setBackground(Color.getHSBColor(colors[0], colors[1],
+		 * colors[2]));
+		 * 
+		 * ImageIcon grass = new ImageIcon("grass.jpg"); for (int i = 0; i < boardSize;
+		 * i++) { for (int j = 0; j < boardSize; j++) { btns[i][j] = new JButton("");
+		 * btns[i][j].setIcon(grass); // add action listeners add(btns[i][j]); } }
+		 * ImageIcon human = new ImageIcon("humanGrass.PNG");
+		 * btns[humanX][humanY].setIcon(human); // as human moves, the humanX and humanY
+		 * variables will need to be changed ImageIcon rock = new
+		 * ImageIcon("rockOnGrass.png"); btns[4][0].setIcon(rock);
+		 * btns[7][2].setIcon(rock); btns[0][1].setIcon(rock); btns[2][3].setIcon(rock);
+		 * btns[2][6].setIcon(rock); btns[9][8].setIcon(rock); btns[5][7].setIcon(rock);
+		 * btns[8][8].setIcon(rock); btns[2][9].setIcon(rock); btns[3][3].setIcon(rock);
+		 * btns[8][6].setIcon(rock);
+		 * 
+		 * // resize the image! ImageIcon tree = new ImageIcon("treeGrass.PNG");
+		 * btns[4][2].setIcon(tree); btns[8][3].setIcon(tree); btns[6][5].setIcon(tree);
+		 * btns[1][7].setIcon(tree); btns[8][9].setIcon(tree);
+		 * 
+		 * // need to add eggs }
+		 */
+
+	// /**
+	// * This method shows the riddle the user needs to answer
+	// *
+	// * @param riddle
+	// * the riddle that needs to be answered
+	// * @return the answer that the user gave
+	// */
+	// public String treeRiddle(String riddle) {
+	// String answer = JOptionPane.showInputDialog(riddle);
+	// return answer;
+	// }
+	//
+	// /**
+	// * This method determines if the answer the user gave was correct
+	// *
+	// * @param correct
+	// * whether or not the answer was correct
+	// */
+	// public void correctTreeAnswer(boolean correct) {
+	// if (correct) {
+	// JOptionPane.showMessageDialog(null, "You got the riddle right!");
+	// }
+	// }
+	//
+	// /**
+	// * This method displays a message to the user so they know they have passed
+	// this
+	// * level
+	// *
+	// * @param pass
+	// * whether or not the user passed the level
+	// */
+	// public void passLevel(boolean pass) {
+	// if (pass) {
+	// JOptionPane.showMessageDialog(null,
+	// "Congratulations! You escaped the first part of the island! On to the next
+	// part...");
+	// }
+	// }
+	//
+	// /**
+	// * This method displays the message telling the user that they cannot move to
+	// * their desired target
+	// */
+	// public void invalidMoveMessage() {
+	// JOptionPane.showMessageDialog(null, "That move's not possible. Try
+	// again...");
+	// }
+	//
+	// /**
+	// * This message is displayed if a pterodactyl bites the human
+	// */
+	// public void pterodactyl() {
+	// JOptionPane.showMessageDialog(null,
+	// "Whoops...looks like you caught the eye of a pterodactyl! That's gonna
+	// hurt...");
+	// }
+
+}

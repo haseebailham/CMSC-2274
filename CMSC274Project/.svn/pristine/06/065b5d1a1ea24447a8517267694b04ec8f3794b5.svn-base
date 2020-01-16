@@ -1,0 +1,115 @@
+package edu.ben.tests;
+
+import org.junit.Test;
+
+import edu.ben.human.Points;
+import student.TestCase;
+
+/**
+ * Points Test Class
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class PointsTest extends TestCase {
+
+	/**
+	 * This tests that the formula for the points works properly when no dinosaur
+	 * egg was picked up
+	 */
+	@Test
+	public void testNormalPoints() {
+		Points p = new Points();
+		int expected = 278;
+		int actual = p.calculatePoints(59.64, false);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works properly if a dinosaur egg
+	 * was picked up
+	 */
+	@Test
+	public void testNormalPointsEgg() {
+		Points p = new Points();
+		int expected = 3586;
+		int actual = p.calculatePoints(767.3, true);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works if you have a preset value
+	 * for points and no dinosaur egg
+	 */
+	@Test
+	public void testPresetPoints() {
+		Points p = new Points();
+		p.setPoints(62.1);
+		int expected = 290;
+		int actual = p.calculatePoints(p.getPoints(), false);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works if you have a preset value
+	 * for points and a dinosaur egg
+	 */
+	@Test
+	public void testPresetPointsEgg() {
+		Points p = new Points();
+		p.setPoints(295);
+		int expected = 1382;
+		int actual = p.calculatePoints(p.getPoints(), true);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works properly when no dinosaur
+	 * egg was picked up
+	 */
+	@Test
+	public void testNormalPointsInt() {
+		Points p = new Points();
+		int expected = 341;
+		int actual = p.calculatePoints(73, false);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works properly if a dinosaur egg
+	 * was picked up
+	 */
+	@Test
+	public void testNormalPointsEggInt() {
+		Points p = new Points();
+		int expected = 476;
+		int actual = p.calculatePoints(101, true);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works if you have a preset value
+	 * for points and no dinosaur egg
+	 */
+	@Test
+	public void testPresetPointsInt() {
+		Points p = new Points();
+		p.setPoints(87);
+		int expected = 406;
+		int actual = p.calculatePoints(p.getPoints(), false);
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * This tests that the formula for the points works if you have a preset value
+	 * for points and a dinosaur egg
+	 */
+	@Test
+	public void testPresetPointsEggInt() {
+		Points p = new Points();
+		p.setPoints(15);
+		int expected = 75;
+		int actual = p.calculatePoints(p.getPoints(), true);
+		assertEquals(expected, actual);
+	}
+}

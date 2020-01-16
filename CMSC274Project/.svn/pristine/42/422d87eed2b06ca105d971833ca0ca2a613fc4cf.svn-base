@@ -1,0 +1,211 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import edu.ben.model.LavaMovement;
+import student.TestCase;
+
+/**
+ * Test class for LavaMovement class.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class LavaMovementTest extends TestCase {
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethodAllSpotsPrint() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		for (int i = 0; i < LavaMovement.NUM_COL; i++) {
+			lm.spread(board, null);
+//			lm.printBoard(board);
+//			System.out.println();
+		}
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod1() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[8][0];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod2() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[7][2];
+		assertEquals(expected, actual);
+
+	}
+
+	/**
+	 * Tests spread method with the starting point: (0, 9);
+	 */
+	@Test
+	public void testSpreadMethod4() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[6][3];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod5() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[5][4];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod6() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[4][5];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod7() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		char expected = 'L';
+		char actual = board[3][6];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method - return true if human was in lava.
+	 */
+	@Test
+	public void testSpreadHumanInWayOfLava() {
+		char[][] board = new char[10][12];
+		board[8][0] = 'H';
+		LavaMovement lm = new LavaMovement(9);
+		boolean actual = lm.spread(board, null);
+		assertFalse(actual);
+
+	}
+
+	/**
+	 * Tests spread method - return false, rock in lava
+	 */
+	@Test
+	public void testSpreadHumanInWayOfLava2() {
+		char[][] board = new char[10][12];
+		board[8][0] = 'R';
+		LavaMovement lm = new LavaMovement(9);
+		boolean actual = lm.spread(board, null);
+		assertTrue(actual);
+	}
+
+	/**
+	 * Tests spread method - return true, dinosaur in lava
+	 */
+	@Test
+	public void testSpreadDinosaurInWayOfLava1() {
+		char[][] board = new char[10][12];
+		board[7][2] = 'X';
+		LavaMovement lm = new LavaMovement(9);
+		int[] prevPos = {7, 2};
+		boolean actual = lm.spread(board, null);
+		actual = lm.spread(board, null);
+		actual = lm.spread(board, prevPos);
+		assertTrue(actual);
+	}
+	
+	/**
+	 * Tests spread method - return true, dinosaur in lava
+	 */
+	@Test
+	public void testSpreadDinosaurInWayOfLava2() {
+		char[][] board = new char[10][12];
+		LavaMovement lm = new LavaMovement(9);
+		int[] prevPos = {7, 2};
+		lm.spread(board, null);
+		board[7][2] = 'X';
+		lm.spread(board, prevPos);
+		lm.spread(board, null);
+		lm.spread(board, null);
+		lm.printBoard(board);
+		
+		// 'X' should be gone, replaced with L
+		String expected = "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[L][L][L][L][L][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[L][L][L][L][L][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[L][L][L][L][L][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[L][L][L][L][L][ ][ ][ ][ ][ ][ ][ ]\n" + 
+				"[ ][L][L][L][L][ ][ ][ ][ ][ ][ ][ ]\n";
+		String actualGrid = systemOut().getHistory();
+		assertEquals(expected, actualGrid);
+	}
+	
+	/**
+	 * Tests spread method - return false, dinosaur not in lava
+	 */
+	@Test
+	public void testSpreadDinosaurInWayOfLava3() {
+		
+	}
+	
+	
+}

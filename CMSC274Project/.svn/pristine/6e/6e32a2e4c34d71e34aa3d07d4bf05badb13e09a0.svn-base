@@ -1,0 +1,34 @@
+package visual;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import model.DinosaurGame;
+
+public abstract class DinosaurFrame extends JFrame {
+	protected DinosaurGame game;
+	public DinosaurFrame(DinosaurGame game) {
+		this.game = game;
+	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3878736530154561197L;
+	
+	public abstract JButton setUpQuitLevelButton();
+		/*ImageIcon quit = new ImageIcon("quitLevel.png");
+		JButton quitLevelButton = new JButton("");
+		quitLevelButton.setBounds(1043, 785, 157, 81);
+		quitLevelButton.setIcon(quit);
+		quitLevelButton.setContentAreaFilled(false);
+		quitLevelButton.setFocusPainted(false);
+		quitLevelButton.setBorderPainted(false);
+		return quitLevelButton;*/
+	
+	
+	
+	
+	// need to add mixer
+
+}

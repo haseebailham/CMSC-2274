@@ -1,0 +1,173 @@
+package edu.ben.model;
+
+import java.util.Stack;
+
+/**
+ * Lava Movement class. 
+ * Spread method which moves lava in game grid from volcano
+ * @author haseebailham
+ * @version 1.0
+ */
+public class LavaMovement {
+
+	/**
+	 * Number of columns
+	 */
+	public static final int NUM_COL = 12;
+
+	/**
+	 * Volcano X position
+	 */
+	private int volcanoX;
+
+	/**
+	 * Counter
+	 */
+	private int counter = 1;
+	
+//	/**
+//	 * Dinosaur positions.
+//	 */
+//	private Stack<Integer[]> dinoPos;
+	
+	/**
+	 * new lava positions
+	 */
+	private Stack<int[]> newLavaPos;
+	
+	/**
+	 * New positions
+	 */
+	private Stack<int[]> positions;
+
+	/**
+	 * Public constructor for Lava Movement class
+	 * @param board
+	 * 				Board
+	 * @param volcanoX
+	 * 				volcano position x
+	 * @param volcanoY
+	 * 				volcano position y
+	 */
+	public LavaMovement(int volcanoX) {
+		this.volcanoX = volcanoX;
+//		dinoPos = new Stack<>();
+		positions = new Stack<>();
+		newLavaPos = new Stack<>();
+	}
+
+	/**
+	 * Spread method, spreads lava from volcano every time its called.
+	 * @return
+	 * 			True - Human was in position where lava spread
+	 * 			False - No Human, just other obstacles (Tree, Rock)
+	 */
+	public boolean spread(char[][] board, int[] dinoPrevPosition) {
+		// clears every time so it only stores the new positions:
+		newLavaPos.clear();
+		
+		// if dinosaur was in lava, updates the dinosaur position to lava.
+		if (checkForDino(dinoPrevPosition)) {
+			board[dinoPrevPosition[0]][dinoPrevPosition[1]] = 'L';
+		}
+		/* 9, 0 
+		 * 		8, 0 - 9, 1 - 8, 1
+		 */
+		boolean noHuman = true;
+		if (counter <= NUM_COL - 2) {
+			// do spreading algorithm here:
+
+			// get columns:
+			// 10
+			for (int i = volcanoX; i >= volcanoX - counter; i--) {
+				int[] arr = {i, counter};
+				if (i >= 0) {
+					if (board[i][counter] == 'H') {
+						noHuman = false;
+						newLavaPos.push(arr);
+//					} else if (board[i][counter] == 'D') {
+//						// don't add position 
+//						dinoPos.push(arr);
+					} else {
+						board[i][counter] = 'L';
+						newLavaPos.push(arr);
+					}
+				}
+			}
+
+			// get rows:
+			for (int i = 0; i < counter; i++) {
+				int[] arr = {volcanoX - counter, i};
+				if (counter < 10) {
+					if (board[volcanoX - counter][i] == 'H') {
+						noHuman = false;
+						newLavaPos.push(arr);
+//					} else if (board[volcanoX - counter][i] == 'D') {
+//						// dont add lava position
+//						dinoPos.push(arr);
+					} else {
+						board[volcanoX - counter][i] = 'L';
+						newLavaPos.push(arr);
+					}
+				}
+			}
+		}
+		counter++;
+		positions.addAll(newLavaPos);
+//		newLavaPos = checkAllLavaUpdatedPositions();
+		return noHuman;
+	}
+	
+	
+	/**
+	 * Checks for dinosaur position in data structure that stores all the lava positions.
+	 * @param dinoPos
+	 * 					Dinosaur positions
+	 * @return True - If the dinosaur position is in the lava.
+	 * 		   False - If the dinosaur position is not in lava.
+	 */
+	public boolean checkForDino(int[] dinoPos) {
+		return positions.contains(dinoPos);
+	}
+	
+//	/**
+//	 * Update new lava positions.
+//	 * @return Stack<Integer[]>
+//	 */
+//	public Stack<Integer[]> checkAllLavaUpdatedPositions() {
+//		Stack<Integer[]> pos = newLavaPos;
+//		while (!dinoPos.isEmpty()) {
+//			Integer[] curr = dinoPos.pop();
+//			newLavaPos.add(curr);
+//		}
+//		return pos;
+//	}
+
+	/**
+	 * Prints board
+	 * @param board
+	 * 				Board
+	 */
+	public void printBoard(char[][] board) {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[0].length; j++) {
+				if (board[i][j] != '\u0000') {
+					System.out.print("[" + board[i][j] + "]");
+				} else {
+					System.out.print("[ ]");
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Gets stack which holds new lava positions
+	 * @return
+	 * 			Stack<Integer>
+	 */
+	public Stack<int[]> getLavaPos() {
+		return newLavaPos;
+	}
+	
+}

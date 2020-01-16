@@ -1,0 +1,105 @@
+package edu.ben.model;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Stores all scores from previously played games.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class ScoresHistory {
+
+	/**
+	 * Scores list, contains all scores from previous plays.
+	 */
+	private List<Integer> scores;
+	
+	/**
+	 * String file name
+	 */
+	private String fileName;
+
+	/**
+	 * ScoresHistory class constructor, initializes scores list.
+	 */
+	public ScoresHistory(String fileName) {
+		scores = new ArrayList<>();
+		this.fileName = fileName;
+	}
+
+	// Write to history the new score.
+	/**
+	 * Writes to file
+	 * @param points
+	 * 					Number of points
+	 */
+	public void writeToFile(int points) {
+		try {
+			File file = new File(fileName);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			
+			PrintWriter pw = new PrintWriter(file);
+			if (!exists(points)) {
+				pw.println(points);
+			}
+			pw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Adds new score to list
+	 * @param score
+	 * 				Integer value of points.
+	 */
+	public void addNewScore(int score) {
+		scores.add(score);
+		writeToFile(score);
+	}
+
+	/**
+	 * Checks if value of score already exists in list.
+	 * @param score
+	 * 				Integer value of score
+	 * @return True - if score is in list
+	 * 		   False - if it is a new score
+	 */
+	public boolean exists(int score) {
+		return scores.contains(score);
+	}
+
+	/**
+	 * Gets scores
+	 * @return
+	 * 			List<Integer> which stores all the scores.
+	 */
+	public List<Integer> getScores() {
+		return scores;
+	}
+
+	/**
+	 * Sets scores 
+	 * @param scores
+	 * 				Scores of List<Integer> type.
+	 */
+	public void setScores(List<Integer> scores) {
+		this.scores = scores;
+	}
+
+	/**
+	 * Gets file name.
+	 * @return
+	 * 			String
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+	
+}

@@ -1,0 +1,106 @@
+package edu.ben.visual;
+
+import java.awt.event.ActionListener;
+import java.util.Queue;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import edu.ben.model.ButtonListener;
+import edu.ben.model.DinosaurGame;
+
+/**
+ * A frame class the extends DinosaurGameGui and uses that class to handle
+ * creation
+ * 
+ * @author abdul;
+ * @author mahrukhraheem;
+ * @author haseebailham
+ */
+public class Lvl2GUI extends DinosaurGameGUI {
+	/**
+	 * serial ID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Lvl2GUI constructor
+	 * 
+	 * @param game
+	 *            DinosaurGame
+	 */
+	public Lvl2GUI(DinosaurGame game) {
+		super(game);
+		startActionListener(game);
+		btns = setUpDefaultButtonIcons(game.getBoard().getBoard());
+		addLevelIcons(game.getBoard().getBoard());
+
+	}
+
+	@Override
+	/**
+	 * action listener for lvl 2
+	 */
+	public void startActionListener(DinosaurGame game) {
+		JPanel gameGridPanel = setUpGameGrid();
+		JPanel healthBarPanel = setUpHealthBar();
+		JButton quitLevelButton = setUpQuitLevelButton();
+		JButton speakerButton = addSpeakers();
+		JPanel pointsPanel = setUpPointsPanel();
+		JPanel keyPanel = setUpKeyPanel(game.getLevel());
+		Queue<JLabel> lbls = setUpLabels();
+		contentPane = setUpContentPane();
+		contentPane.add(gameGridPanel);
+		contentPane.add(healthBarPanel);
+		contentPane.add(quitLevelButton);
+		contentPane.add(speakerButton);
+		// add points panel and key panel.
+		contentPane.add(pointsPanel);
+		contentPane.add(keyPanel);
+		while (!lbls.isEmpty()) {
+			JLabel curr = lbls.remove();
+			contentPane.add(curr);
+		}
+
+		sound();
+		ActionListener soundAction = new ButtonListener(game, 0, 0, btns, progressBar, currPointsLabel);
+		speakerButton.addActionListener(soundAction);
+		ActionListener quitGameAction = new ButtonListener(game, 0, 0, btns, progressBar, currPointsLabel);
+		quitLevelButton.addActionListener(quitGameAction);
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				btns[i][j] = new JButton("");
+				btns[i][j].setIcon(grass2);
+				// add action listeners
+				ActionListener actionListener = new ButtonListener(game, i, j, btns, progressBar, currPointsLabel);
+				btns[i][j].addActionListener(actionListener);
+				gameGridPanel.add(btns[i][j]);
+			}
+		}
+	}
+
+	@Override
+	/**
+	 * adds the velociraptor and egg icons
+	 */
+	public void addLevelIcons(char[][] board) {
+		ImageIcon velo = new ImageIcon("velociraptor.PNG"); // will change picture later
+		ImageIcon egg = new ImageIcon("eggLvl2.PNG");
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				if (board[i][j] == 'V') {
+					btns[i][j].setIcon(velo);
+				} else if (board[i][j] == 'P') {
+					btns[i][j].setIcon(egg);// will add egg picture
+				}
+			}
+		}
+
+		JLabel something = new JLabel();
+		something.setBounds(0, 0, 1200, 928);
+		contentPane.add(something);
+	}
+
+}

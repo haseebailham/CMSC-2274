@@ -1,0 +1,160 @@
+package model;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+/**
+ * Messages class, which displays JOptionPanes to the player for communication.
+ * Works with button listener class
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class Messages {
+
+	/**
+	 * This method will display a message to the player if a pterodactyl found them
+	 * 
+	 * @return true if the pterodactyl found the human
+	 */
+	public boolean pterodactlyMessage() {
+		RandomGen r = new RandomGen();
+		if (r.randomNumber()) {
+			JOptionPane.showMessageDialog(null,
+					"Whoa! Looks like you caught the eye of a pterodactyl! That's gonna hurt...");
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within a
+	 * herbivore's zone of damage
+	 */
+	public void herbMessage() {
+		String message1 = "Whoops! Looks like the dinosaur accidently hit you with its tail!";
+		String message2 = "Uh-oh, looks like you got in the way of a dinosaur...";
+		String message3 = "Looks like you got in the middle of a dinosaur and its food";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			JOptionPane.showMessageDialog(null, message1);
+		} else if (message == 2) {
+			JOptionPane.showMessageDialog(null, message2);
+		} else if (message == 3) {
+			JOptionPane.showMessageDialog(null, message3);
+		}
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within a
+	 * velociraptor's zone of damage
+	 */
+	public void veloMessage() {
+		String message1 = "Those velociraptors must think you look tasty";
+		String message2 = "Watch out! Those velociraptors look hungry!";
+		String message3 = "Yikes! That velociraptor sure got close!";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			JOptionPane.showMessageDialog(null, message1);
+		} else if (message == 2) {
+			JOptionPane.showMessageDialog(null, message2);
+		} else if (message == 3) {
+			JOptionPane.showMessageDialog(null, message3);
+		}
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within the
+	 * t-rex's zone of damage
+	 */
+	public void rexMessage() {
+		String message1 = "Watch out for the T-Rex!";
+		String message2 = "Those teeth look sharp...";
+		String message3 = "Run faster! The T-Rex is catching up!";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			JOptionPane.showMessageDialog(null, message1);
+		} else if (message == 2) {
+			JOptionPane.showMessageDialog(null, message2);
+		} else if (message == 3) {
+			JOptionPane.showMessageDialog(null, message3);
+		}
+	}
+
+	/**
+	 * This method displays a message to the player telling them that their
+	 * attempted move is invalid
+	 */
+	public void invalidMessage() {
+		JOptionPane.showMessageDialog(null, "Not a valid move. Try again...");
+	}
+
+	/**
+	 * This method will display a message to the player telling them that they lost
+	 * the game
+	 */
+	public void lostGameMessage() {
+		JOptionPane.showMessageDialog(null, "You died...Game over :(");
+	}
+
+	/**
+	 * This method displays a message to the player telling them that they are stuck
+	 * and cannot move anywhere on the board
+	 */
+	public void humanTrappedMessage() {
+		JOptionPane.showMessageDialog(null, "You're stuck... Game over");
+	}
+
+	/**
+	 * This method will display a riddle to the player and have them answer it
+	 * 
+	 * @param riddle
+	 *            the riddle being asked
+	 * @return the answer that the player gives
+	 */
+	public String showRiddle(String riddle) {
+		String answer = JOptionPane.showInputDialog(riddle);
+		return answer;
+	}
+
+	/**
+	 * This method responds to the answer the player gave to a riddle
+	 * 
+	 * @param correct
+	 *            whether or not the player's answer was correct
+	 */
+	public void respondRiddle(boolean correct) {
+		if (correct) {
+			JOptionPane.showMessageDialog(null, "You got the riddle right!");
+		} else {
+			JOptionPane.showMessageDialog(null, "Sorry, incorrect answer.");
+		}
+	}
+
+	/**
+	 * This method displays a message telling the player that they escaped level
+	 * one/two
+	 */
+	public void escapeLevel() {
+		ImageIcon confetti = new ImageIcon("confetti.png");
+		JFrame box = new JFrame();
+		JOptionPane.showMessageDialog(box, "Congratulations! You escaped a part of the island! On to the next part...",
+				"You did it!", JOptionPane.INFORMATION_MESSAGE, confetti);
+	}
+
+	/**
+	 * This method displays a message telling the player that they escaped level
+	 * three and won the game
+	 */
+	public void escapeIsland() {
+		ImageIcon confetti = new ImageIcon("confetti.png");
+		JFrame box = new JFrame();
+		JOptionPane.showMessageDialog(box,
+				"Congratulations! You managed to make it past all the dinosaurs and have reached the boat! Safe travels!",
+				"You won!", JOptionPane.INFORMATION_MESSAGE, confetti);
+	}
+}

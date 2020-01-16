@@ -1,0 +1,29 @@
+package testing;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import model.BackEndBoard;
+import model.HumanBubble;
+
+public class BubbleHumanTest {
+
+	@Test
+	public void testHumanBubble() {
+		HumanBubble humanBubble = new HumanBubble(1);
+		char[][] board = new char[10][10];
+		BackEndBoard backEnd = new BackEndBoard(1);
+		board = backEnd.getBoard();
+		
+		backEnd.getHuman().addNewPosition(9, 11);
+		backEnd.placeCharBoard(9, 11, 'H');
+		backEnd.displayBoard();
+		char[][] actual = humanBubble.makeBubble(board, backEnd.getHuman().getHumanX(), backEnd.getHuman().getHumanY());
+		humanBubble.displayBubble(actual);
+		boolean[][] booleanArr = humanBubble.changeTypeBoard(actual);
+
+		boolean test = booleanArr[9][11];
+		assertFalse(test);
+	}
+}

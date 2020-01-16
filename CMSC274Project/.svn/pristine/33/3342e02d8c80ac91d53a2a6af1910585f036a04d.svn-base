@@ -1,0 +1,191 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * creates a bubble around a dinosaur based off of their current position the
+ * bubble is a 3x3 2-D char array with the dinosaur in the middle ([1][1] the
+ * bubble is used to see if a human is by a dinosaur
+ * 
+ * @author abdul
+ *
+ */
+public class Bubble {
+	private int level;
+	private char[][] bubble;
+	private int bubbleSize;
+	private ArrayList<int[]> indexList = new ArrayList<int[]>(); // keeps track of the board indexs
+	private int extra = 0;
+	public Bubble(int level) {
+		this.setLevel(level);
+		if (level == 1) {
+			bubbleSize = 1;
+			bubble = new char[3][3]; // bubble size is one so creates a 3x3 bubble
+		} else if (level == 2) { // for other lvls
+			bubbleSize = 2;
+			bubble = new char[5][5];
+		} else if (level == 3) {
+			bubbleSize = 3;
+			bubble = new char[7][7];
+		}
+	}
+
+	/**
+	 * creates a "Bubble" around the dino based on the the bubble is a sub array of
+	 * the board the purpose of the bubble is to look for the human(H) creates a
+	 * bubble from the dino location where the dino is in the center of the bubble
+	 * 
+	 * @param board
+	 *            the current board
+	 * @param i
+	 *            the i index
+	 * @param j
+	 *            the j index
+	 */
+	public char[][] makeBubble(char[][] board, int i, int j) { // i j is mid point of bubble
+		indexList.clear();
+		int rowCounter = 0; // keeps track of which row to add to
+		int columnCounter = 0; // keeps track of which column to add to
+		
+		for (int x = i - bubbleSize; x <= i + bubbleSize; x++) {
+			if (x < 0 || x >= board.length) {
+				for (int k = 0; k < bubble[0].length; k++) {
+					bubble[rowCounter][k] = 'F';
+				}
+				rowCounter++;
+				continue; // out of bounds
+			}
+			for (int y = j - bubbleSize; y <= j + bubbleSize; y++) {
+				if (y < 0 || y >= board[i].length) {
+					bubble[rowCounter][columnCounter] = 'F';
+
+					columnCounter++;
+					continue; // out of bounds
+				}
+				if (board[x][y] != 0 && board[x][y] != 'H') {
+					bubble[rowCounter][columnCounter] = 'F';
+				} else {
+					bubble[rowCounter][columnCounter] = board[x][y];
+				}
+				columnCounter++;
+				int[] indexs = new int[2];
+				indexs[0] = x;
+				indexs[1] = y;
+				indexList.add(indexs);
+			}
+			columnCounter = 0;
+			rowCounter++;
+		}
+		return bubble;
+	}
+
+	/**
+	 * looks for the human in the dinos bubble
+	 * 
+	 * @return true if human is in bubble
+	 */
+	public boolean checkBubbleForHuman() {
+		boolean foundHuman = false;
+		for (int i = 0; i < bubble.length; i++) {
+			for (int j = 0; j < bubble[i].length; j++) {
+				if (bubble[i][j] == 'H') {
+					foundHuman = true;
+				}
+			}
+		}
+		return foundHuman;
+	}
+
+	/**
+	 * Method for changing type of board from character to boolean.
+	 * 
+	 * @param bubble
+	 *            bubble character 2D array.
+	 * @return Boolean 2D array of board.
+	 */
+
+	public boolean[][] changeTypeBoard(char[][] bubble) {
+		boolean[][] boardBoolean = new boolean[bubble.length][bubble[0].length];
+
+		for (int i = 0; i < bubble.length; i++) {
+			for (int j = 0; j < bubble[i].length; j++) {
+				// if the char board has an F, it's because it is not part of the bubble
+				if (bubble[i][j] == 'F') {
+					boardBoolean[i][j] = false;
+				} else if (bubble[i][j] == 'X') {
+					// if the char board has a X, it represents a spot the human is allowed to go on
+					boardBoolean[i][j] = true;
+				} else if (bubble[i][j] == 'T') {
+					// if the char board has a t (lower case), it represents a tree, which is
+					// something the human should be allowed to click on
+					boardBoolean[i][j] = true;
+				} else if (bubble[i][j] == 'R') {
+					// if the char board has an R, it is a rock, something the human cannot click on
+					// or pass through
+					boardBoolean[i][j] = false;
+				}
+			}
+		}
+
+		return boardBoolean;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the bubble
+	 */
+	public char[][] getBubble() {
+		return bubble;
+	}
+
+	/**
+	 * @param bubble
+	 *            the bubble to set
+	 */
+	public void setBubble(char[][] bubble) {
+		this.bubble = bubble;
+	}
+
+	/**
+	 * @return the indexList
+	 */
+	public ArrayList<int[]> getIndexList() {
+		return indexList;
+	}
+
+	/**
+	 * @param indexList the indexList to set
+	 */
+	public void setIndexList(ArrayList<int[]> indexList) {
+		this.indexList = indexList;
+	}
+
+	public void displayBubble(char[][] bubble) {
+		for (int i = 0; i < bubble.length; i++) {
+			for (int j = 0; j < bubble[i].length; j++) {
+				if (bubble[i][j] == 0) {
+					System.out.print("[ ]");
+				} else {
+					System.out.print("[" + bubble[i][j] + "]");
+				}
+
+			}
+			System.out.println();
+		}
+	}
+}

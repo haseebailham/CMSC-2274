@@ -1,0 +1,26 @@
+package testing;
+
+import org.junit.Test;
+
+import model.RandomGen;
+import student.TestCase;
+
+/**
+ * RandomGenTest for RandomGen class
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class RandomGenTest extends TestCase {
+
+	/**
+	 * This test makes sure that the number produced is not outside of the range
+	 */
+	@Test
+	public void testWrongRange() {
+		RandomGen r = new RandomGen();
+		int actual = r.randomNum(4);
+		assertNotSame(actual, 7);
+	}
+
+}

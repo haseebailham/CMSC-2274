@@ -1,0 +1,310 @@
+package edu.ben.visual;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.border.EmptyBorder;
+
+import edu.ben.model.DinosaurGame;
+import edu.ben.model.Sounds;
+import edu.ben.model.SplashScreenButtonListener;
+
+import java.awt.Color;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.Font;
+
+/**
+ * Splash screen, menu bar. extends the abstract class DinosaurFrame
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class SplashScreenGUI extends DinosaurFrame {
+
+	/**
+	 * Serial version UID variable
+	 */
+	private static final long serialVersionUID = 2427849017347537714L;
+
+	/**
+	 * Content Pane.
+	 */
+	private JPanel contentPane;
+
+	/**
+	 * Speaker icon.
+	 */
+	private JButton speakerButton;
+
+	/**
+	 * Start button
+	 */
+	private JButton startButton;
+
+	/**
+	 * Exit button
+	 */
+	private JButton exitButton;
+
+	/**
+	 * Speaker.
+	 */
+	private ImageIcon speaker;
+
+	/**
+	 * Buttons used in Splash Screen
+	 */
+	private ArrayList<JButton> btns = new ArrayList<>();
+
+	/**
+	 * Create the frame.
+	 */
+	public SplashScreenGUI(DinosaurGame game) {
+		super(game);
+		sound();
+		setUndecorated(true);
+		getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+		setBounds(100, 100, 950, 600);
+		contentPane = new JPanel();
+
+		contentPane.setBackground(Color.BLACK);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+		addSpeakers();
+		addButtons();
+		addDecorations();
+		addBorders();
+	}
+
+	/**
+	 * Adds Border to contentPane.
+	 */
+	public void addBorders() {
+		ImageIcon tb = new ImageIcon("gb2.png");
+		ImageIcon bb = new ImageIcon("gb.png");
+		ImageIcon lb = new ImageIcon("gb3.png");
+		ImageIcon rb = new ImageIcon("gb4.png");
+
+		JLabel bottomBorder = new JLabel();
+		bottomBorder.setBounds(0, 538, 342, 64);
+		bottomBorder.setIcon(bb);
+		contentPane.add(bottomBorder);
+
+		JLabel bb2 = new JLabel();
+		bb2.setBounds(282, 545, 335, 57);
+		bb2.setIcon(bb);
+		contentPane.add(bb2);
+
+		JLabel bb3 = new JLabel();
+		bb3.setBounds(504, 538, 504, 61);
+		bb3.setIcon(bb);
+		contentPane.add(bb3);
+
+		JLabel bb4 = new JLabel();
+		bb4.setBounds(705, 538, 259, 64);
+		bb4.setIcon(bb);
+		contentPane.add(bb4);
+
+		JLabel rightBorder = new JLabel();
+		rightBorder.setBounds(849, -14, 115, 362);
+		rightBorder.setIcon(rb);
+		contentPane.add(rightBorder);
+
+		JLabel rb2 = new JLabel();
+		rb2.setBounds(849, 295, 126, 283);
+		rb2.setIcon(rb);
+		contentPane.add(rb2);
+
+		JLabel topBorder = new JLabel();
+		topBorder.setBounds(0, 0, 356, 57);
+		topBorder.setIcon(tb);
+		contentPane.add(topBorder);
+
+		JLabel tb2 = new JLabel();
+		tb2.setBounds(282, 0, 363, 57);
+		tb2.setIcon(tb);
+		contentPane.add(tb2);
+
+		JLabel tb3 = new JLabel();
+		tb3.setBounds(568, 0, 348, 57);
+		tb3.setIcon(tb);
+		contentPane.add(tb3);
+
+		JLabel tb4 = new JLabel();
+		tb4.setBounds(728, 0, 237, 42);
+		tb4.setIcon(tb);
+		contentPane.add(tb4);
+
+		JLabel leftBorder = new JLabel();
+		leftBorder.setBounds(-34, -54, 143, 440);
+		contentPane.add(leftBorder);
+		leftBorder.setIcon(lb);
+
+		JLabel lb2 = new JLabel("");
+		lb2.setBounds(-34, 233, 97, 392);
+		lb2.setIcon(lb);
+		contentPane.add(lb2);
+
+		JLabel soundLabel = new JLabel("Sound ON/OFF:");
+		soundLabel.setForeground(Color.YELLOW);
+		soundLabel.setBounds(62, 501, 126, 42);
+		contentPane.add(soundLabel);
+	}
+
+	/**
+	 * Adds decorations.
+	 */
+	public void addDecorations() {
+
+		ImageIcon welcomeLogo = new ImageIcon("welcomeLogo.png");
+		JLabel welcome = new JLabel("New label");
+		welcome.setBounds(422, 453, 363, 80);
+		welcome.setIcon(welcomeLogo);
+
+		contentPane.add(welcome);
+
+		ImageIcon trex = new ImageIcon("trex.png");
+		JLabel trexPic = new JLabel();
+		trexPic.setBounds(160, 125, 726, 412);
+		trexPic.setIcon(trex);
+		contentPane.add(trexPic);
+
+		ImageIcon waterfall = new ImageIcon("bird.gif");
+		JLabel birdLabel = new JLabel("");
+		birdLabel.setBounds(711, 0, 253, 258);
+		birdLabel.setIcon(waterfall);
+		contentPane.add(birdLabel);
+
+		// ImageIcon flower = new ImageIcon("flower.gif");
+		// JLabel flower1 = new JLabel("New label");
+		// flower1.setBounds(0, -14, 119, 114);
+		// flower1.setIcon(flower);
+		// contentPane.add(flower1);
+		//
+		// ImageIcon flower2 = new ImageIcon("flower2.gif");
+		// JLabel flower2Label = new JLabel();
+		// flower2Label.setBounds(859, 519, 95, 75);
+		// flower2Label.setIcon(flower2);
+		// contentPane.add(flower2Label);
+
+		ImageIcon ptero1 = new ImageIcon("pterodactyl1.png");
+		JLabel ptero1Label = new JLabel();
+		ptero1Label.setBounds(60, 16, 270, 114);
+		ptero1Label.setIcon(ptero1);
+
+		contentPane.add(ptero1Label);
+
+		JLabel gameLogo = new JLabel();
+		gameLogo.setBackground(Color.WHITE);
+		gameLogo.setBounds(43, 74, 770, 127);
+		contentPane.add(gameLogo);
+
+		ImageIcon logo = new ImageIcon("MAINLOGO.gif");
+		gameLogo.setIcon(logo);
+
+		ImageIcon volcano = new ImageIcon("volcano2.png");
+		JLabel volcanoLabel = new JLabel("");
+		volcanoLabel.setBounds(670, 376, 216, 193);
+		volcanoLabel.setIcon(volcano);
+		contentPane.add(volcanoLabel);
+	}
+
+	/**
+	 * Add mute speaker and unmute speaker for audio.
+	 */
+	public JButton addSpeakers() {
+		speaker = new ImageIcon("speaker.png");
+		speakerButton = new JButton();
+		speakerButton.setActionCommand("speaker");
+		speakerButton.setIcon(speaker);
+		ActionListener speakerBtnListener = new SplashScreenButtonListener(speakerButton, game);
+		speakerButton.addActionListener(speakerBtnListener);
+		getContentPane().add(speakerButton);
+
+		speakerButton.setBounds(160, 501, 58, 57);
+		speakerButton.setContentAreaFilled(false);
+		speakerButton.setFocusPainted(false);
+		speakerButton.setBorderPainted(false);
+
+		contentPane.add(speakerButton);
+		btns.add(speakerButton);
+		return speakerButton;
+	}
+
+	/**
+	 * Add Buttons to content Pane.
+	 */
+	public void addButtons() {
+
+		ImageIcon start = new ImageIcon("startGame.png");
+		startButton = new JButton("START GAME");
+		startButton.setActionCommand("start");
+		startButton.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		startButton.setBackground(Color.WHITE);
+		startButton.setIcon(start);
+		startButton.setBounds(62, 214, 176, 64);
+		startButton.setContentAreaFilled(false);
+		startButton.setFocusPainted(false);
+		startButton.setBorderPainted(false);
+
+		ActionListener startBtnListener = new SplashScreenButtonListener(startButton, game);
+		startButton.addActionListener(startBtnListener);
+		contentPane.add(startButton);
+
+		contentPane.add(startButton);
+		btns.add(startButton);
+
+		exitButton = setUpQuitLevelButton(); // gets button from abstract class
+
+		contentPane.add(exitButton);
+		btns.add(exitButton);
+
+//		ImageIcon instructions = new ImageIcon("instructionsLogo.png");
+//		instrButton = new JButton("Instructions");
+//		instrButton.setBounds(51, 404, 178, 50);
+//		instrButton.setContentAreaFilled(false);
+//		instrButton.setBorderPainted(false);
+//		instrButton.setFocusPainted(false);
+//		instrButton.setIcon(instructions);
+//		instrButton.setActionCommand("instructions");
+//		contentPane.add(instrButton);
+//
+//		ActionListener instrListener = new SplashScreenButtonListener(instrButton, game);
+//		instrButton.addActionListener(instrListener);
+//		contentPane.add(instrButton);
+	}
+
+	/**
+	 * Sound settings
+	 */
+	public void sound() {
+		Sounds.init();
+		Sounds.SPLASH.play();
+	}
+
+	/**
+	 * Set up quit level button 
+	 */
+	@Override
+	public JButton setUpQuitLevelButton() {
+		JButton exitButton;
+		ImageIcon exit = new ImageIcon("exit.png");
+		exitButton = new JButton("EXIT GAME");
+		exitButton.setActionCommand("quit");
+		exitButton.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
+		exitButton.setBounds(51, 273, 194, 75);
+		exitButton.setIcon(exit);
+		exitButton.setContentAreaFilled(false);
+		exitButton.setFocusPainted(false);
+		exitButton.setBorderPainted(false);
+		ActionListener exitBtnListener = new SplashScreenButtonListener(exitButton, game);
+		exitButton.addActionListener(exitBtnListener);
+
+		return exitButton;
+	}
+}

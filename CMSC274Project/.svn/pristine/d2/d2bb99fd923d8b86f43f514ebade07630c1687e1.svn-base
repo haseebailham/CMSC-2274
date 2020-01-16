@@ -1,0 +1,639 @@
+package edu.ben.visual;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import edu.ben.model.DinosaurGame;
+import edu.ben.model.Sounds;
+
+/**
+ * A abstract class used which creates a basic blueprint of the lvl frames this
+ * class also has creation methods for parts of the frame extends the abstract
+ * class DinosaurFrame to get methods like add speakers and exit button
+ * 
+ * @author abdul;
+ * @author mahrukhraheem;
+ * @author haseebailham
+ * @version 1.0
+ */
+public abstract class DinosaurGameGUI extends DinosaurFrame {
+
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * Board size global variable.
+	 */
+	protected final int BOARD_ROW = 10;
+
+	/**
+	 * Board column size for Level 1 and 2.
+	 */
+	protected int BOARD_COL = 17;
+	/**
+	 * level of the round being played
+	 */
+	protected int level;
+	/**
+	 * Button for grid, 10 x 17.
+	 */
+	protected JButton[][] btns = new JButton[BOARD_ROW][BOARD_COL];
+	/**
+	 * image icon for human level 1
+	 */
+	protected final ImageIcon human = new ImageIcon("humanGrass.PNG");
+
+	/**
+	 * image icon for human level 2
+	 */
+	protected final ImageIcon human2 = new ImageIcon("humanlvl2.PNG");
+
+	/**
+	 * image icon for human in level 3
+	 */
+	protected final ImageIcon human3 = new ImageIcon("humanGround.PNG");
+	/**
+	 * image icon for grass level 1
+	 */
+	protected final ImageIcon grass = new ImageIcon("grass.jpg");
+
+	/**
+	 * image icon for grass level 2
+	 */
+	protected final ImageIcon grass2 = new ImageIcon("l2grass.PNG");
+
+	/**
+	 * image icon for ground level 3
+	 */
+	protected final ImageIcon ground = new ImageIcon("ground.jpg");
+	/**
+	 * imageIcon for rock level 1
+	 */
+	protected final ImageIcon rock = new ImageIcon("rockOnGrass.png");
+
+	/**
+	 * imageIcon for rock level 2
+	 */
+	protected final ImageIcon rock2 = new ImageIcon("rockl2Grass.PNG");
+
+	/**
+	 * Image icon for tree
+	 */
+	protected final ImageIcon tree = new ImageIcon("treeGrass.PNG");
+
+	/**
+	 * Image icon for tree for level 2
+	 */
+	protected final ImageIcon tree2 = new ImageIcon("tree2.PNG");
+
+	/**
+	 * Image icon for berries
+	 */
+	protected final ImageIcon berries = new ImageIcon("berryBush.PNG");
+
+	/**
+	 * Image icon for volcano
+	 */
+	protected final ImageIcon volcano = new ImageIcon("volcanoGround.png");
+
+	/**
+	 * Image icon for boat half 1
+	 */
+	protected final ImageIcon boat1 = new ImageIcon("boat1.PNG");
+
+	/**
+	 * Image icon for boat half 2
+	 */
+	protected final ImageIcon boat2 = new ImageIcon("boat2.PNG");
+	/**
+	 * Image icon for speaker
+	 */
+	protected final ImageIcon speaker = new ImageIcon("speaker.png");
+
+	/**
+	 * rock button linked list
+	 */
+	private LinkedList<JButton> rocks = new LinkedList<JButton>();
+	/**
+	 * tree button linked list
+	 */
+	private LinkedList<JButton> trees = new LinkedList<JButton>();
+	/**
+	 * progress bar
+	 */
+	public JProgressBar progressBar;
+
+	/**
+	 * Current points label.
+	 */
+	public JLabel currPointsLabel;
+
+	/**
+	 * Start of health value.
+	 */
+	private int healthValue = 100;
+	/**
+	 * the content pane
+	 */
+	protected JPanel contentPane = new JPanel();
+
+	/**
+	 * Abstract gui class
+	 * 
+	 * @param game
+	 *            DinosaurGame game obeject
+	 */
+	public DinosaurGameGUI(DinosaurGame game) {
+		super(game);
+		this.level = game.getLevel();
+	}
+
+	/**
+	 * starts the action listener by adding the button listener class to the button
+	 * array
+	 */
+	public abstract void startActionListener(DinosaurGame game);
+
+	/**
+	 * this method add the unique dinosaur and other icons per level
+	 */
+	public abstract void addLevelIcons(char[][] board);
+
+	/**
+	 * sets up the default icons for the buttons each level will need to add the
+	 * icons of dinosaurs and others used for that level
+	 * 
+	 * @param board
+	 *            char[][] the back end game board
+	 */
+	public JButton[][] setUpDefaultButtonIcons(char[][] board) {
+		if (game.getLevel() == 3) {
+			BOARD_COL = 12;
+		}
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				if (board[i][j] == 'R') {
+					if (game.getLevel() == 1) {
+						btns[i][j].setIcon(rock);
+						rocks.add(btns[i][j]);
+					} else if (game.getLevel() == 2) {
+
+						btns[i][j].setIcon(rock2);
+						rocks.add(btns[i][j]);
+					} else if (game.getLevel() == 3) {
+						btns[i][j].setIcon(volcano);
+					}
+				} else if (board[i][j] == 'T') {
+					btns[i][j].setIcon(berries);
+					trees.add(btns[i][j]);
+				} else if (board[i][j] == 'H') {
+					if (game.getLevel() == 1) {
+						btns[i][j].setIcon(human);
+					} else if (game.getLevel() == 2) {
+						btns[i][j].setIcon(human2);
+					} else if (game.getLevel() == 3) {
+						btns[i][j].setIcon(human3);
+					}
+				} else if (board[i][j] == 'E') { // sets the exit (rightmost column of the board)
+					if (game.getLevel() == 1) {
+						btns[i][j].setIcon(grass2);
+					} else if (game.getLevel() == 2) {
+						btns[i][j].setIcon(ground);
+					} else if (game.getLevel() == 3) {
+						btns[4][11].setIcon(boat1);
+						btns[5][11].setIcon(boat2);
+					}
+				}
+			}
+		}
+		for (int i = 0; i < rocks.size(); i++) {
+			if (game.getLevel() == 1) {
+				rocks.get(i).setDisabledIcon(rock);
+			} else if (game.getLevel() == 2) {
+				rocks.get(i).setDisabledIcon(rock2);
+			}
+			rocks.get(i).setEnabled(false);
+		}
+
+		return btns;
+	}
+
+	// close frame method,
+	/**
+	 * sets up the healthBar
+	 * 
+	 * @return JPanel the healthBar panel
+	 */
+	public JPanel setUpHealthBar() {
+		JPanel healthBarPanel = new JPanel();
+
+		// Progress bar:
+		progressBar = new JProgressBar(0, 100);
+		progressBar.setBounds(6, 779, 220, 36);
+		healthBarPanel.setBackground(Color.BLACK);
+		healthBarPanel.setBounds(1106, 70, 237, 71);
+		healthBarPanel.setPreferredSize(new Dimension(237, 71));
+		// starting health
+		progressBar.setValue(healthValue);
+		progressBar.setStringPainted(true);
+		progressBar.setPreferredSize(new Dimension(220, 36));
+		progressBar.setUI(new ProgressBar());
+		progressBar.setForeground(Color.GREEN.brighter());
+		healthBarPanel.add(progressBar);
+		return healthBarPanel;
+	}
+
+	/**
+	 * set up the grid panel
+	 * 
+	 * @return JPanel gameGrid Panel
+	 */
+	public JPanel setUpGameGrid() {
+		JPanel gameGridPanel = new JPanel();
+		gameGridPanel.setBounds(6, 6, 1088, 782);
+		gameGridPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		gameGridPanel.setLayout(new BorderLayout(0, 0));
+		gameGridPanel.setLayout(new GridLayout(0, 17, 1, 1));
+		gameGridPanel.setBackground(new Color(0, 0, 0));
+		// contentPane.add(gameGridPanel);
+		return gameGridPanel;
+	}
+
+	/**
+	 * Sets up quit level button level frame.
+	 */
+	public JButton setUpQuitLevelButton() {
+		ImageIcon quit = new ImageIcon("quitLevel.png");
+		JButton quitLevelButton = new JButton("");
+		quitLevelButton.setActionCommand("quit");
+		quitLevelButton.setBounds(1143, 705, 157, 71);
+		quitLevelButton.setIcon(quit);
+		quitLevelButton.setContentAreaFilled(false);
+		quitLevelButton.setFocusPainted(false);
+		quitLevelButton.setBorderPainted(false);
+		return quitLevelButton;
+	}
+
+	/**
+	 * Sets up labels for level frame.
+	 * 
+	 * @return Queue of labels.
+	 */
+	public Queue<JLabel> setUpLabels() {
+		Queue<JLabel> lbls = new LinkedList<>();
+
+		JLabel lblHealth = new JLabel("HEALTH");
+		lblHealth.setForeground(Color.GREEN.brighter());
+		lblHealth.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblHealth.setBounds(1181, 48, 79, 16);
+		lbls.add(lblHealth);
+
+		JLabel lblPoints = new JLabel("POINTS");
+		lblPoints.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblPoints.setForeground(Color.ORANGE);
+		lblPoints.setBounds(1199, 153, 61, 16);
+		lbls.add(lblPoints);
+
+		JLabel lblKey = new JLabel("KEY");
+		lblKey.setForeground(new Color(153, 50, 204));
+		lblKey.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblKey.setBounds(1199, 256, 61, 16);
+		lbls.add(lblKey);
+
+		JLabel lblSoundOnOff = new JLabel("Sound On/Off:");
+		lblSoundOnOff.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblSoundOnOff.setForeground(new Color(211, 211, 211));
+		lblSoundOnOff.setBounds(1156, 612, 127, 16);
+		lbls.add(lblSoundOnOff);
+		return lbls;
+	}
+
+	/**
+	 * Sets up points panel for level frame.
+	 * 
+	 * @return points panel after setting up label.
+	 */
+	public JPanel setUpPointsPanel() {
+		JPanel pointsPanel = new JPanel();
+		pointsPanel.setBounds(1106, 174, 237, 71);
+		pointsPanel.setLayout(null);
+		pointsPanel.setBackground(Color.BLACK);
+
+		currPointsLabel = new JLabel("0");
+		currPointsLabel.setFont(new Font("Avenir Next", Font.BOLD, 30));
+		currPointsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		currPointsLabel.setForeground(Color.BLACK);
+		currPointsLabel.setBounds(49, 16, 128, 38);
+		pointsPanel.add(currPointsLabel);
+		
+		JLabel pointsBackGroundLabel = new JLabel("");
+		pointsBackGroundLabel.setIcon(new ImageIcon("pointsBg.png"));
+		pointsBackGroundLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pointsBackGroundLabel.setFont(new Font("Lucida Grande", Font.BOLD, 30));
+		pointsBackGroundLabel.setBounds(0, 0, 256, 77);
+		pointsPanel.add(pointsBackGroundLabel);
+		return pointsPanel;
+	}
+
+	/**
+	 * Sets up key panel.
+	 * 
+	 * @return JPanel for key.
+	 */
+	public JPanel setUpKeyPanel(int level) {
+		
+		JPanel keyPanel = new JPanel();
+		keyPanel.setBackground(new Color(250, 235, 215));
+		keyPanel.setBounds(1106, 278, 237, 306);
+		keyPanel.setLayout(null);
+		
+		JLabel berryL = new JLabel();
+		berryL.setBounds(6, 6, 34, 31);
+		berryL.setIcon(new ImageIcon("berryBushResize.PNG"));
+		keyPanel.add(berryL);
+		
+		JLabel berryD = new JLabel("- BERRIES FOR HEALTH");
+		berryD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		berryD.setForeground(new Color(0, 0, 0));
+		berryD.setBounds(53, 6, 167, 31);
+		keyPanel.add(berryD);
+		
+		if (game.getLevel() == 1) {
+			setUpKeyLevel1(keyPanel);
+		} else if (game.getLevel() == 2) {
+			setUpKeyLevel2(keyPanel);
+		} else {
+			setUpKeyLevel3(keyPanel);
+		}
+		
+		JLabel background = new JLabel("");
+		background.setIcon(new ImageIcon("keyBg.png"));
+		background.setBounds(0, 0, 237, 306);
+		keyPanel.add(background);
+		return keyPanel;
+	}
+	
+	/**
+	 * Sets up key level 1
+	 * @param keyPanel
+	 * 				Key panel
+	 */
+	public void setUpKeyLevel1(JPanel keyPanel) {
+		
+		JLabel dinoL = new JLabel();
+		dinoL.setBounds(6, 46, 34, 31);
+		dinoL.setIcon(new ImageIcon("brachGrassResize.PNG"));
+		keyPanel.add(dinoL);
+		
+		JLabel dino2L = new JLabel();
+		dino2L.setBounds(52, 46, 34, 31);
+		dino2L.setIcon(new ImageIcon("ankylResize.png"));
+		keyPanel.add(dino2L);
+		
+		JLabel rockL = new JLabel();
+		rockL.setBounds(6, 89, 34, 31);
+		rockL.setIcon(new ImageIcon("rockOnGrassResize.png"));
+		keyPanel.add(rockL);
+		
+		JLabel exitL = new JLabel();
+		exitL.setBounds(6, 136, 34, 31);
+		exitL.setIcon(new ImageIcon("l2Grass.PNG"));
+		keyPanel.add(exitL);
+		
+		JTextArea text = new JTextArea();
+		text.setEditable(false);
+		text.setFont(new Font("Verdana", Font.PLAIN, 12));
+		text.setBackground(Color.LIGHT_GRAY);
+		text.setText("These herbivores are eating...better\n not get in their "
+				+ "way! Get past them\n without them hurting you, and with "
+				+ "\nenough stamina to get to the other \nparts of the island!");
+		text.setBounds(6, 187, 225, 113);
+		keyPanel.add(text);
+		
+		JLabel berryD = new JLabel("- BERRIES FOR HEALTH");
+		berryD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		berryD.setForeground(new Color(0, 0, 0));
+		berryD.setBounds(53, 6, 167, 31);
+		keyPanel.add(berryD);
+		
+		JLabel dinoD = new JLabel("- DINOSAURS");
+		dinoD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		dinoD.setBounds(98, 46, 122, 31);
+		keyPanel.add(dinoD);
+		
+		JLabel rockD = new JLabel("- ROCK");
+		rockD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		rockD.setBounds(52, 89, 168, 31);
+		keyPanel.add(rockD);
+		
+		JLabel exitD = new JLabel("- POINTS");
+		exitD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		exitD.setBounds(52, 136, 167, 31);
+		keyPanel.add(exitD);
+	}
+	
+	/**
+	 * Stes up level 2 key
+	 * @param keyPanel
+	 * 				Key panel
+	 */
+	public void setUpKeyLevel2(JPanel keyPanel) {
+		JLabel dinoL = new JLabel();
+		dinoL.setBounds(6, 46, 34, 31);
+		dinoL.setIcon(new ImageIcon("veloc.png"));
+		keyPanel.add(dinoL);
+		
+		JLabel rockL = new JLabel();
+		rockL.setBounds(6, 89, 34, 31);
+		rockL.setIcon(new ImageIcon("rock2Resize.png"));
+		keyPanel.add(rockL);
+		
+		JLabel exitL = new JLabel();
+		exitL.setBounds(6, 170, 34, 31);
+		exitL.setIcon(new ImageIcon("ground.jpg"));
+		keyPanel.add(exitL);
+		
+		JTextArea text = new JTextArea();
+		text.setEditable(false);
+		text.setFont(new Font("Verdana", Font.PLAIN, 12));
+		text.setBackground(Color.LIGHT_GRAY);
+		text.setText("Yikes! There's a pack of velociraptors\n here! "
+				+ "Hurry and make sure they \ndon't hurt you "
+				+ "so you can get to the\n last part of the island!");
+		text.setBounds(6, 209, 225, 91);
+		keyPanel.add(text);
+		
+		JLabel eggLabel = new JLabel();
+		eggLabel.setBounds(6, 132, 34, 31);
+		eggLabel.setIcon(new ImageIcon("eggLvl2Resize.PNG"));
+		keyPanel.add(eggLabel);
+		
+		
+		JLabel berryD = new JLabel("- BERRIES FOR HEALTH");
+		berryD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		berryD.setForeground(new Color(0, 0, 0));
+		berryD.setBounds(53, 6, 167, 31);
+		keyPanel.add(berryD);
+		
+		JLabel dinoD = new JLabel("- DINOSAUR");
+		dinoD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		dinoD.setBounds(52, 46, 122, 31);
+		keyPanel.add(dinoD);
+		
+		JLabel rockD = new JLabel("- ROCK");
+		rockD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		rockD.setBounds(52, 89, 168, 31);
+		keyPanel.add(rockD);
+		
+		JLabel exitD = new JLabel("- EXIT");
+		exitD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		exitD.setBounds(53, 170, 167, 31);
+		keyPanel.add(exitD);
+		
+		JLabel eggD = new JLabel("- POINTS");
+		eggD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		eggD.setBounds(52, 132, 168, 26);
+		keyPanel.add(eggD);
+	}
+	
+	/**
+	 * Sets up key level 3
+	 * @param keyPanel
+	 * 				Key Panel
+	 */
+	public void setUpKeyLevel3(JPanel keyPanel) {
+		JLabel dinoL = new JLabel();
+		dinoL.setBounds(6, 46, 34, 31);
+		dinoL.setIcon(new ImageIcon("trexResize.png"));
+		keyPanel.add(dinoL);
+		
+		JLabel lavaL = new JLabel();
+		lavaL.setBounds(6, 89, 34, 31);
+		lavaL.setIcon(new ImageIcon("lava.gif"));
+		keyPanel.add(lavaL);
+		
+		JLabel exitL = new JLabel();
+		exitL.setBounds(6, 170, 34, 31);
+		exitL.setIcon(new ImageIcon("boat1Resize.PNG"));
+		keyPanel.add(exitL);
+		
+		JLabel exit2L = new JLabel();
+		exit2L.setBounds(52, 170, 34, 31);
+		exit2L.setIcon(new ImageIcon("boat2Resize.PNG"));
+		keyPanel.add(exit2L);
+		
+		JLabel eggLabel = new JLabel();
+		eggLabel.setBounds(6, 132, 34, 31);
+		eggLabel.setIcon(new ImageIcon("eggRoundResize.PNG"));
+		keyPanel.add(eggLabel);
+		
+		JTextArea text = new JTextArea();
+		text.setEditable(false);
+		text.setFont(new Font("Verdana", Font.PLAIN, 12));
+		text.setText("Woah, a T-Rex AND a volcano?!\nHurry and try to outrace"
+				+ " the lava\n spilling and the dinosaur coming"
+				+ "\n after you reach the boat for safety.");
+		text.setBackground(Color.LIGHT_GRAY);
+		text.setBounds(6, 209, 225, 91);
+		keyPanel.add(text);
+		
+		JLabel dinoD = new JLabel("- DINOSAUR");
+		dinoD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		dinoD.setBounds(52, 46, 122, 31);
+		keyPanel.add(dinoD);
+		
+		JLabel lavaD = new JLabel("- LAVA");
+		lavaD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		lavaD.setBounds(52, 89, 168, 31);
+		keyPanel.add(lavaD);
+		
+		JLabel exitD = new JLabel("- EXIT");
+		exitD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		exitD.setBounds(95, 170, 167, 31);
+		keyPanel.add(exitD);
+		
+		JLabel eggD = new JLabel("- EGG");
+		eggD.setFont(new Font("Gurmukhi MT", Font.BOLD, 14));
+		eggD.setBounds(52, 132, 168, 26);
+		keyPanel.add(eggD);
+	}
+
+	/**
+	 * sets up the contentPane
+	 * 
+	 * @return content pane that holds the gui content
+	 */
+	public JPanel setUpContentPane() {
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 700, 500);
+		setBounds(500, 20, 40, 40);
+		setSize(new Dimension(1350, 815));
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setBackground(Color.BLACK);
+		return contentPane;
+	}
+
+	/**
+	 * this method calls the sound class which plays the music for the level of the
+	 * frame
+	 */
+	public void sound() {
+		if (level == 1) {
+			Sounds.Level1.play();
+		} else if (level == 2) {
+			Sounds.Level2.play();
+		} else if (level == 3) {
+			Sounds.Level3.play();
+		}
+	}
+
+	/**
+	 * Adds speaker buttons to level frame.
+	 */
+	public JButton addSpeakers() {
+		JButton speakerButton = new JButton();
+		speakerButton.setActionCommand("speaker");
+		speakerButton.setIcon(speaker);
+		speakerButton.setBounds(1183, 640, 58, 57);
+		speakerButton.setContentAreaFilled(false);
+		speakerButton.setFocusPainted(false);
+		speakerButton.setBorderPainted(false);
+		return speakerButton;
+	}
+
+	/**
+	 * @return the btns
+	 */
+	public JButton[][] getBtns() {
+		return btns;
+	}
+
+	/**
+	 * @param btns
+	 *            the btns to set
+	 */
+	public void setBtns(JButton[][] btns) {
+		this.btns = btns;
+	}
+
+}

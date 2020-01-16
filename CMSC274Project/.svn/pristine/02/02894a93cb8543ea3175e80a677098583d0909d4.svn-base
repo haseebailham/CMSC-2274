@@ -1,0 +1,66 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.dino.Dino;
+import edu.ben.dino.DinoList;
+import edu.ben.dino.Velociraptor;
+
+/**
+ * test class for the dinosaur pathing class
+ * 
+ * @author abdul
+ *
+ */
+public class DinosaurPathingTest {
+
+	@Test
+	/**
+	 * test path for a dinosaur on lvl 2
+	 */
+	public void testlvl2Moves() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Dino temp = dl.getIndex(0);
+		temp.setFoundHuman(true);
+		ArrayList<int[]> actual = temp.moveDinosaur(backEnd.getBoard(), 0, 0);
+		int[] expected = { 0, 2 };
+
+		assertArrayEquals(expected, actual.get(1));
+	}
+
+	@Test
+	/**
+	 * test path for a dinosaur on lvl 2
+	 */
+	public void testlvl2Moves2() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Dino temp = dl.getIndex(1);
+		temp.setFoundHuman(true);
+		ArrayList<int[]> actual = temp.moveDinosaur(backEnd.getBoard(), 0, 0);
+		int[] expected = { 0, 2 };
+
+		assertArrayEquals(expected, actual.get(1));
+	}
+
+	@Test
+	/**
+	 * test path for a dinosaur on lvl 2
+	 */
+	public void testlvl2Moves3() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Dino temp = dl.getIndex(2);
+		temp.setFoundHuman(true);
+		ArrayList<int[]> actual = temp.moveDinosaur(backEnd.getBoard(), 0, 0);
+		int[] expected = { 2, 2 };
+
+		assertArrayEquals(expected, actual.get(1));
+	}
+}

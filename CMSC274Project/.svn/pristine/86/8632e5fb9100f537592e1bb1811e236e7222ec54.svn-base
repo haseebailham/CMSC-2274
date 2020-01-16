@@ -1,0 +1,255 @@
+package edu.ben.model;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+/**
+ * Messages class, which displays JOptionPanes to the player for communication.
+ * Works with button listener class
+ * 
+ * @author mraheem
+ * @version 1.0
+ */
+public class Messages {
+
+	/**
+	 * This method will display a message to the player if a pterodactyl found them
+	 * 
+	 * @return true if the pterodactyl found the human
+	 */
+	public boolean pterodactlyMessage() {
+		RandomGen r = new RandomGen();
+		if (r.randomNumber()) {
+			JFrame box = new JFrame();
+			String ptero = "Whoa! Looks like you caught the eye of a pterodactyl! That's gonna hurt...";
+			JLabel message = new JLabel(ptero);
+			message.setFont(new Font("Chiller", Font.BOLD, 35));
+			message.setForeground(Color.GREEN.darker().darker());
+			ImageIcon pterodactyl = new ImageIcon("pterodactyl.png");
+			JOptionPane.showMessageDialog(box, message, null, JOptionPane.INFORMATION_MESSAGE, pterodactyl);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within a
+	 * herbivore's zone of damage
+	 */
+	public void herbMessage() {
+		JFrame box = new JFrame();
+		JLabel label = new JLabel();
+		String message1 = "Whoops! Looks like the dinosaur accidently hit you with its tail!";
+		String message2 = "Uh-oh, looks like you got in the way of a dinosaur...";
+		String message3 = "Looks like you got in the middle of a dinosaur and its food";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			label = new JLabel(message1);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 2) {
+			label = new JLabel(message2);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 3) {
+			label = new JLabel(message3);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		}
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within a
+	 * velociraptor's zone of damage
+	 */
+	public void veloMessage() {
+		JFrame box = new JFrame();
+		JLabel label = new JLabel();
+		String message1 = "Those velociraptors must think you look tasty";
+		String message2 = "Watch out! Those velociraptors look hungry!";
+		String message3 = "Yikes! That velociraptor sure got close!";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			label = new JLabel(message1);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 2) {
+			label = new JLabel(message2);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 3) {
+			label = new JLabel(message3);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		}
+	}
+
+	/**
+	 * This method chooses a message to display to the player if they are within the
+	 * t-rex's zone of damage
+	 */
+	public void rexMessage() {
+		JFrame box = new JFrame();
+		JLabel label = new JLabel();
+		String message1 = "Watch out for the T-Rex!";
+		String message2 = "Those teeth look sharp...";
+		String message3 = "Run faster! The T-Rex is catching up!";
+		RandomGen r = new RandomGen();
+		int message = r.randomNum(3);
+		if (message == 1) {
+			label = new JLabel(message1);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 2) {
+			label = new JLabel(message2);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		} else if (message == 3) {
+			label = new JLabel(message3);
+			label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+			label.setForeground(Color.RED.darker());
+			JOptionPane.showMessageDialog(box, label, null, JOptionPane.INFORMATION_MESSAGE, null);
+		}
+	}
+
+	/**
+	 * This method displays a message to the player telling them that their
+	 * attempted move is invalid
+	 */
+	public void invalidMessage() {
+		JFrame box = new JFrame();
+		String invalid = "Not a valid move. Try again...";
+		JLabel message = new JLabel(invalid);
+		message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+		message.setForeground(Color.DARK_GRAY);
+		JOptionPane.showMessageDialog(box, message, null, JOptionPane.INFORMATION_MESSAGE, null);
+	}
+
+	/**
+	 * This method will display a message to the player telling them that they lost
+	 * the game
+	 */
+	public void lostGameMessage(int points) {
+		JFrame box = new JFrame();
+		String over = "You died...Game over :( \n\rYour score is: " + points;
+		JLabel message = new JLabel(over);
+		message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+		message.setForeground(Color.DARK_GRAY);
+		JOptionPane.showMessageDialog(box, message, "Too bad", JOptionPane.INFORMATION_MESSAGE, null);
+
+	}
+
+	/**
+	 * This method displays a message to the player telling them that they are stuck
+	 * and cannot move anywhere on the board
+	 */
+	public void humanTrappedMessage(int points) {
+		JFrame box = new JFrame();
+		String stuck = "You're stuck... Game over\n\rYour score is: " + points;
+		JLabel message = new JLabel(stuck);
+		message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+		JOptionPane.showMessageDialog(box, message, "Uh-Oh", JOptionPane.INFORMATION_MESSAGE, null);
+	}
+
+	/**
+	 * This method will display a message to the player if they stepped in lava
+	 */
+	public void humanKilledInLavaMessage(int points) {
+		JFrame box = new JFrame();
+		String lavaMsg = "The lava got to you! You died...\n\rYour score is: " + points;
+		JLabel message = new JLabel(lavaMsg);
+		message.setFont(new Font("Chiller", Font.BOLD, 30));
+		message.setForeground(Color.RED);
+		ImageIcon lava = new ImageIcon("moltenLava.gif");
+		JOptionPane.showMessageDialog(box, message, "Ahhh!", JOptionPane.INFORMATION_MESSAGE, lava);
+	}
+
+	/**
+	 * This method will display a riddle to the player and have them answer it
+	 * 
+	 * @param riddle
+	 *            the riddle being asked
+	 * @return the answer that the player gives
+	 */
+	public String showRiddle(String riddle) {
+		JFrame box = new JFrame();
+		ImageIcon question = new ImageIcon("question.jpg");
+		JLabel ask = new JLabel(riddle);
+		ask.setFont(new Font("Century Gothic", Font.BOLD, 20));
+		ask.setForeground(Color.CYAN.darker().darker());
+		String answer = (String) JOptionPane.showInputDialog(box, ask, "Your riddle is: ", 0, question, null, "");
+		return answer;
+	}
+
+	/**
+	 * This method responds to the answer the player gave to a riddle
+	 * 
+	 * @param correct
+	 *            whether or not the player's answer was correct
+	 */
+	public void respondRiddle(boolean correct) {
+		JFrame box = new JFrame();
+		if (correct) {
+			String right = "You got the riddle right! You can eat some fruit for health points";
+			JLabel message = new JLabel(right);
+			message.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+			message.setForeground(Color.GREEN.darker().darker());
+			ImageIcon berries = new ImageIcon("berryBush.PNG");
+			JOptionPane.showMessageDialog(box, message, "Good job!", JOptionPane.INFORMATION_MESSAGE, berries);
+
+		} else {
+			String wrong = "Sorry, incorrect answer.";
+			JLabel message = new JLabel(wrong);
+			message.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+			message.setForeground(Color.BLUE.brighter());
+			ImageIcon cry = new ImageIcon("cry.png");
+			JOptionPane.showMessageDialog(box, message, "Oops", JOptionPane.INFORMATION_MESSAGE, cry);
+		}
+	}
+
+	/**
+	 * This method displays a message telling the player that they escaped level
+	 * one/two
+	 */
+	public void escapeLevel(int points) {
+		JFrame box = new JFrame();
+		String congrats = "Congratulations! You escaped a part of the island!\r On to the next part...\rYour score is: "
+				+ points;
+		JLabel message = new JLabel(congrats);
+		message.setFont(new Font("Juice ITC", Font.BOLD, 25));
+		message.setForeground(Color.pink.darker().darker());
+		ImageIcon confetti = new ImageIcon("confetti.png");
+		JOptionPane.showMessageDialog(box, message, "You did it!", JOptionPane.INFORMATION_MESSAGE, confetti);
+	}
+
+	/**
+	 * This method displays a message telling the player that they escaped level
+	 * three and won the game
+	 */
+	public void escapeIsland(int points) {
+		JFrame box = new JFrame();
+		String congrats = "Congratulations! You managed to make it past all the dinosaurs and have reached the boat! \rSafe travels! \nYour score is: "
+				+ points;
+		JLabel message = new JLabel(congrats);
+		message.setFont(new Font("Juice ITC", Font.BOLD, 25));
+		message.setForeground(Color.pink.darker().darker());
+		ImageIcon confetti = new ImageIcon("confetti.png");
+		JOptionPane.showMessageDialog(box, message, "You won!", JOptionPane.INFORMATION_MESSAGE, confetti);
+	}
+}

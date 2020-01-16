@@ -1,0 +1,156 @@
+package edu.ben.human;
+
+/**
+ * Health Bar class, which deals with the health status of the human character
+ * 
+ * @author mraheem
+ * @version 1.0
+ *
+ */
+
+public class HealthBar {
+	/**
+	 * damage that will be received from a herbivore
+	 */
+	final public static int herbivoreDmg = 20;
+	/**
+	 * damage that will be received from a velociraptor
+	 */
+	final public static int carnivoreDmg = 30;
+	/**
+	 * damage that will be received from a pterodactyl
+	 */
+	final public static int pterodactylDmg = 10;
+	/**
+	 * damage that will be received from the t-rex
+	 */
+	final public static int tRexDmg = 50;
+	/**
+	 * health points gained from eating berries
+	 */
+	final public static int fruit = 10;
+	/**
+	 * Health bar originally starts as 100 health points
+	 */
+	private int healthBar = 100;
+	/**
+	 * Riddle class to be used for the first level
+	 */
+	private Riddles r = new Riddles();
+	/**
+	 * Riddle class to be used for the second level
+	 */
+	private Riddles2 r2 = new Riddles2();
+	/**
+	 * Riddle class to be used for the third level
+	 */
+	private Riddles3 r3 = new Riddles3();
+
+	/**
+	 * HealthBar Constructor
+	 */
+	public HealthBar() {
+		// empty
+	}
+
+	/**
+	 * This method determines how the player's health will be affected, depending on
+	 * what they got hit with/if they ate fruit
+	 */
+	public void changeHealth(String effect) {
+		// if the human gets attacked by a herbivore
+		if (effect.equals("herbivore")) {
+			healthBar -= herbivoreDmg;
+			// if the human gets attacked by a velociraptor (level 2)
+		} else if (effect.equals("carnivore")) {
+			healthBar -= carnivoreDmg;
+			// if the human gets attacked by the T-Rex
+		} else if (effect.equals("trex")) {
+			healthBar -= tRexDmg;
+			// if the human gets attacked by a pterodactyl (level 2)
+		} else if (effect.equals("pterodactyl")) {
+			healthBar -= pterodactylDmg;
+			// if the human answered the riddle correctly and ate the fruit
+		} else if (effect.equals("fruit")) {
+			// if the health was already 90 or above, the player cannot get higher than 100
+			// for health. If it is below 90, it will simply get 10 more points
+			if (healthBar >= 90) {
+				healthBar = 100;
+			} else {
+				healthBar += fruit;
+			}
+		}
+		// if the health gets below 0, it is the same as having no health at all, so the
+		// health points are set to zero so no negative values have to be taken into
+		// account
+		if (healthBar < 0) {
+			healthBar = 0;
+		}
+
+	}
+
+	/**
+	 * gets the status of the health bar
+	 * 
+	 * @return healthBar the healthBar
+	 */
+	public int getHealthBar() {
+		return healthBar;
+	}
+
+	/**
+	 * sets the health bar status
+	 * 
+	 * @param healthBar
+	 *            the healthBar to set
+	 */
+	public void setHealthBar(int healthBar) {
+		this.healthBar = healthBar;
+	}
+
+	/**
+	 * @return the r which is the first level riddle class
+	 */
+	public Riddles getR() {
+		return r;
+	}
+
+	/**
+	 * @param r
+	 *            Riddles class the r (the first level riddle class) to set
+	 */
+	public void setR(Riddles r) {
+		this.r = r;
+	}
+
+	/**
+	 * @return the r2, which is the second level riddle class
+	 */
+	public Riddles2 getR2() {
+		return r2;
+	}
+
+	/**
+	 * @param r2
+	 *            Riddles2 class the r2 (the second level riddle class)to set
+	 */
+	public void setR2(Riddles2 r2) {
+		this.r2 = r2;
+	}
+
+	/**
+	 * @return the r3, which is the third level riddle class
+	 */
+	public Riddles3 getR3() {
+		return r3;
+	}
+
+	/**
+	 * @param r3
+	 *            Riddles 3 class the r3 (the third level riddle class) to set
+	 */
+	public void setR3(Riddles3 r3) {
+		this.r3 = r3;
+	}
+
+}

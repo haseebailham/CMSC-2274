@@ -1,0 +1,89 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.human.Human;
+import edu.ben.human.HumanBubble;
+
+/**
+ * test cases for the human bubble class
+ * 
+ * @author abdul
+ *
+ */
+public class BubbleHumanTest {
+	/**
+	 * test the bubble made around the human using the backEnd board
+	 */
+	public void testBubble() {
+		HumanBubble humanBubble = new HumanBubble(1);
+		char[][] board = new char[10][17];
+		BackEndBoard backEnd = new BackEndBoard(1);
+		board = backEnd.getBoard();
+		humanBubble.makeBubble(board, 9, 0);
+		char actual = humanBubble.getBubble()[6][6];
+		char expected = 'F';
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	/**
+	 * test the bubble made around the human using the backEnd board
+	 */
+	public void testHumanBubble() {
+		HumanBubble humanBubble = new HumanBubble(1);
+		char[][] board = new char[10][17];
+		BackEndBoard backEnd = new BackEndBoard(1);
+		board = backEnd.getBoard();
+
+		backEnd.getHuman().addNewPosition(9, 11);
+		backEnd.placeCharBoard(9, 11, 'H');
+
+		char[][] actual = humanBubble.makeBubble(board, backEnd.getHuman().getHumanX(), backEnd.getHuman().getHumanY());
+
+		boolean[][] booleanArr = humanBubble.changeTypeBoard(actual);
+
+		boolean test = booleanArr[9][11];
+		assertFalse(test);
+	}
+
+	@Test
+	/**
+	 * test the list of dinosaur in the human bubble
+	 */
+	public void testRangeList() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+		Human human = backEnd.getHuman();
+		human.makeBooleanBubble();
+		ArrayList<int[]> temp = human.lookForDinosaur();
+		int[] actual = temp.get(2);
+		int[] expected = { 9, 4 };
+
+		// 9,4 7,2 6, 0
+		assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	/**
+	 * test the list of dinosaur in the human bubble
+	 */
+	public void testRangeList2() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+		Human human = backEnd.getHuman();
+		human.addNewPosition(5, 5);
+		backEnd.placeCharBoard(5, 5, 'H');
+		backEnd.removeIndex(9, 0);
+		human.makeBooleanBubble();
+		ArrayList<int[]> temp = human.lookForDinosaur();
+		int actual = temp.size();
+		int expected = 7;
+
+		// 9,4 7,2 6, 0
+		assertEquals(expected, actual);
+	}
+}

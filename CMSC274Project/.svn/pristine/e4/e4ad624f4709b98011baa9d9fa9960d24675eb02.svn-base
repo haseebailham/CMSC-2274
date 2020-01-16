@@ -1,0 +1,31 @@
+package model;
+
+/**
+ * Class which check Pathways for Human to move to target.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class Path {
+
+	private int playerX;
+	private int playerY;
+	private int targetX;
+	private int targetY;
+
+	public Path(int playerX, int playerY, int targetX, int targetY) {
+		this.playerX = playerX;
+		this.playerY = playerY;
+		this.targetX = targetX;
+		this.targetY = targetY;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+}

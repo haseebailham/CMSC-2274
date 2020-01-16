@@ -1,0 +1,141 @@
+package model;
+
+import java.awt.EventQueue;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import visual.LevelOneGUI;
+
+/**
+ * Level 1 class.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class Level1 implements Level {
+
+	// this class should have a method that adds new position to queue for human.
+	// Because
+	// it is connected to dinosaur board.
+
+	/**
+	 * board array for levels
+	 */
+	private BackEndBoard board;
+	/**
+	 * Level number 1.
+	 */
+	private int level = 1;
+
+	private boolean lvlOver = false;
+	private static LevelOneGUI frame;
+
+	/**
+	 * Public Constructor for Level1 Class.
+	 */
+	public Level1() {
+		// sets up board at each level 1 object instantiation.
+		board = new BackEndBoard(level);
+
+	}
+
+	/**
+	 * Starts level 1.
+	 * 
+	 * @param args
+	 *            String
+	 */
+	public static void main(String[] args) {
+		Level1 lvl = new Level1();
+		frame = new LevelOneGUI(lvl);
+		lvl.playLevel(frame);
+	}
+
+	
+
+	// play level 1
+	// set gui frame visible, and start level 1.
+	/**
+	 * Method which sets GUI Frame visible and EventQueue.invokeLater(new
+	 * Runnable());
+	 */
+	@Override
+	public void playLevel(LevelOneGUI frame) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+
+				try {
+
+					frame.setTitle("Dinosaur Game: Level 1");
+					frame.setVisible(true);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * @return the board
+	 */
+	public BackEndBoard getBoard() {
+		return board;
+	}
+
+	/**
+	 * @param board
+	 *            the board to set
+	 */
+	public void setBoard(BackEndBoard board) {
+		this.board = board;
+	}
+
+	public void closeFrame(LevelOneGUI frame) {
+		frame.setVisible(false);
+		frame.dispose();
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the lvlOver
+	 */
+	public boolean isLvlOver() {
+		return lvlOver;
+	}
+
+	/**
+	 * @param lvlOver
+	 *            the lvlOver to set
+	 */
+	public void setLvlOver(boolean lvlOver) {
+		this.lvlOver = lvlOver;
+	}
+	/**
+	 * @return the frame
+	 */
+	public LevelOneGUI getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame the frame to set
+	 */
+	public static void setFrame(LevelOneGUI frame) {
+		Level1.frame = frame;
+	}
+}

@@ -1,0 +1,29 @@
+package edu.ben.tests;
+
+import javax.swing.JButton;
+import javax.swing.JProgressBar;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.model.ButtonListener;
+import edu.ben.model.DinosaurGame;
+import student.TestCase;
+
+public class ButtonListenerTest extends TestCase {
+
+	@Test
+	public void testClear() {
+		BackEndBoard board = new BackEndBoard(1);
+		board.generateLevel(1);
+		DinosaurGame dg = new DinosaurGame();
+		JButton[][] btns = null;
+		JProgressBar jp = null;
+		ButtonListener bl = new ButtonListener(dg, 9, 0, btns, jp);
+		boolean expected = false;
+		boolean actual = bl.isClear();
+		assertEquals(expected, actual);
+
+	}
+
+}

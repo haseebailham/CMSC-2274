@@ -1,0 +1,28 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.dino.Dino;
+import edu.ben.dino.DinoList;
+import edu.ben.dino.Velociraptor;
+
+public class DinosaurPathingTest {
+
+	@Test
+	public void testlvl2Moves() {
+		BackEndBoard backEnd = new BackEndBoard(2);
+		DinoList dl = backEnd.getDl();
+		Dino temp = dl.getIndex(0);
+		temp.setFoundHuman(true);
+		ArrayList<int[]> actual = temp.moveDinosaur(backEnd.getBoard(), 0, 0);
+		int[] expected = {0,2};
+		
+		assertArrayEquals(expected, actual.get(1));
+	}
+
+}

@@ -1,0 +1,19 @@
+package edu.ben.dino;
+
+import edu.ben.model.Bubble;
+
+public class Trex extends Dino {
+	private int extra = 0;
+	public Trex() {
+		setDinoDmg(50);
+		setMovement(3);
+		setDinoName("Trex");
+		setCharName('X');
+		setBubble(new Bubble(3));
+		setDinoX(getDinoX());
+		setDinoY(getDinoY());
+		setPrevLocation(getPrevLocation());
+	}
+
+
+}

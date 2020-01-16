@@ -1,0 +1,16 @@
+package model;
+
+/**
+ * Points history class which keeps track of all different points 
+ * in order gotten from playing the game.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class PointsHistory {
+
+	// data structure stores all points, must be static so whenever dinosaur game is played, 
+	// stores the points if player passed all three levels.
+	
+	// method to find the highest score
+	
+}

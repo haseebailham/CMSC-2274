@@ -1,0 +1,11 @@
+package model;
+
+/**
+ * Rock obstacle in Dinosaur Game.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class Rock {
+	
+	
+}

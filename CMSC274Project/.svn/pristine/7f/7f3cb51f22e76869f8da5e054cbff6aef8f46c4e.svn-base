@@ -1,0 +1,236 @@
+package visual;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import model.BackEndBoard;
+import model.ButtonListener;
+import model.DinosaurGame;
+
+/**
+ * "Splash Screen" - Main window, button Start Game takes it into Level 1, if
+ * won, takes it to level 2 and level 3.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public abstract class DinosaurGameGUI extends DinosaurFrame {
+
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * Board size global variable.
+	 */
+	protected final int BOARD_ROW = 10;
+	protected int BOARD_COL = 17;
+	/**
+	 * level of the round being played
+	 */
+	protected int level;
+	/**
+	 * Button for grid, 10 x 17.
+	 */
+	protected JButton[][] btns = new JButton[BOARD_ROW][BOARD_COL];
+	/**
+	 * image icon for human
+	 */
+	protected final ImageIcon human = new ImageIcon("humanGrass.PNG");
+	/**
+	 * image icon for grass
+	 */
+	protected final ImageIcon grass = new ImageIcon("grass.jpg");
+	/**
+	 * imageIcon for rock
+	 */
+	protected final ImageIcon rock = new ImageIcon("rockOnGrass.png");
+	/**
+	 * Image icon for tree
+	 */
+	protected final ImageIcon tree = new ImageIcon("treeGrass.PNG");
+
+	/**
+	 * Image icon for volcano
+	 */
+	protected final ImageIcon volcano = new ImageIcon("volcano.jpg");
+	
+	/**
+	 * rock button linked list
+	 */
+	private LinkedList<JButton> rocks = new LinkedList<JButton>();
+	/**
+	 * tree button linked list
+	 */
+	private LinkedList<JButton> trees = new LinkedList<JButton>();
+	/**
+	 * progress bar
+	 */
+	public JProgressBar progressBar;
+	/**
+	 * Start of health value.
+	 */
+	private int healthValue = 100;
+
+	protected JPanel contentPane = new JPanel();
+
+	/**
+	 * Abstract gui class
+	 * 
+	 * @param game
+	 *            DinosaurGame game obeject
+	 */
+	public DinosaurGameGUI(DinosaurGame game) {
+		super(game);
+	}
+
+	/**
+	 * starts the action listener
+	 */
+	public abstract void startActionListener(DinosaurGame game);
+
+	/**
+	 * this method add the unique dinosaur and other icons per level
+	 */
+	public abstract void addLevelIcons(char[][] board);
+
+	/**
+	 * sets up the default icons for the buttons each level will need to add the
+	 * icons of dinosaurs and others used for that level
+	 * 
+	 * @param board
+	 *            char[][] the back end game board
+	 */
+	public JButton[][] setUpDefaultButtonIcons(char[][] board) {
+		if (game.getLevel() == 3) {
+			BOARD_COL = 12;
+		}
+		for (int i = 0; i < BOARD_ROW; i++) {
+			for (int j = 0; j < BOARD_COL; j++) {
+				if (board[i][j] == 'R') {
+					if (game.getLevel() == 3) {
+						btns[i][j].setIcon(volcano);
+					} else {
+						btns[i][j].setIcon(rock);
+						rocks.add(btns[i][j]);
+					}
+				} else if (board[i][j] == 'T') {
+					btns[i][j].setIcon(tree);
+					trees.add(btns[i][j]);
+				} else if (board[i][j] == 'H') {
+					btns[i][j].setIcon(human);
+				} else if (board[i][j] == 'E') { // sets the exit (rightmost column of the board)
+					btns[i][j].setIcon(null);
+					btns[i][j].setBackground(Color.DARK_GRAY);
+					btns[i][j].setOpaque(true);
+				}
+			}
+		}
+		for (int i = 0; i < rocks.size(); i++) {
+			rocks.get(i).setDisabledIcon(rock);
+			rocks.get(i).setEnabled(false);
+		}
+
+		return btns;
+	}
+
+	// close frame method,
+	/**
+	 * sets up the healthBar
+	 * 
+	 * @return JPanel the healthBar panel
+	 */
+	public JPanel setUpHealthBar() {
+		JPanel healthBarPanel = new JPanel();
+		healthBarPanel.setBounds(6, 779, 400, 50);
+		// contentPane.add(healthBarPanel);
+		healthBarPanel.setLayout(null);
+
+		// Progress bar:
+		progressBar = new JProgressBar(0, 100);
+		progressBar.setBounds(28, 6, 400, 50);
+
+		// starting health
+		progressBar.setValue(healthValue);
+		progressBar.setStringPainted(true);
+		progressBar.setPreferredSize(new Dimension(400, 50));
+		healthBarPanel.add(progressBar);
+		progressBar.setUI(new ProgressBar());
+		return healthBarPanel;
+	}
+
+	/**
+	 * set up the grid panel
+	 * 
+	 * @return JPanel gameGrid Panel
+	 */
+	public JPanel setUpGameGrid() {
+		JPanel gameGridPanel = new JPanel();
+		gameGridPanel.setBounds(6, 6, 1188, 767);
+		gameGridPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		gameGridPanel.setLayout(new BorderLayout(0, 0));
+		gameGridPanel.setLayout(new GridLayout(0, 17, 1, 1));
+		gameGridPanel.setBackground(new Color(0, 0, 0));
+		// contentPane.add(gameGridPanel);
+		return gameGridPanel;
+	}
+
+	public JButton setUpQuitLevelButton() {
+		ImageIcon quit = new ImageIcon("quitLevel.png");
+		JButton quitLevelButton = new JButton("");
+		quitLevelButton.setActionCommand("quit");
+		quitLevelButton.setBounds(1043, 785, 157, 81);
+		quitLevelButton.setIcon(quit);
+		quitLevelButton.setContentAreaFilled(false);
+		quitLevelButton.setFocusPainted(false);
+		quitLevelButton.setBorderPainted(false);
+
+		// quitLevelButton.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// setVisible(false);
+		// SplashScreenGUI frame = new SplashScreenGUI();
+		// frame.setVisible(true);
+		// }
+		// });
+		return quitLevelButton;
+	}
+
+	/**
+	 * sets up the contentPane
+	 * 
+	 * @return content pane that holds the gui content
+	 */
+	public JPanel setUpContentPane() {
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 700, 500);
+		setBounds(500, 20, 40, 40);
+		setSize(new Dimension(1200, 950));
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+
+		return contentPane;
+	}
+
+}

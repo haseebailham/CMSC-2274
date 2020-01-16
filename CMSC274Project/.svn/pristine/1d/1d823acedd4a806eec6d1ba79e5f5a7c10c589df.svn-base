@@ -1,0 +1,17 @@
+package model;
+
+import visual.LevelOneGUI;
+
+/**
+ * Level interface
+ * @author haseebailham
+ * @version 1.0
+ */
+public interface Level {
+	
+	/**
+	 * Plays level.
+	 */
+	public void playLevel(LevelOneGUI frame);
+
+}

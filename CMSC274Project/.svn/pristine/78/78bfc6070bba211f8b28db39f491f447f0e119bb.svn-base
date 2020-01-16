@@ -1,0 +1,287 @@
+package edu.ben.human;
+
+import java.util.ArrayList;
+
+/**
+ * Human Bubble class, subclass of Bubble class.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class HumanBubble {
+	// how will we know these values in this class?where will the info come from?
+	private int targetX;
+	private int targetY;
+	private int humanX;
+	private int humanY;
+	private int bubbleSize = 6; // this is the amount of steps the human can take
+	private char[][] bubble;
+	private int MAX_MOVES = 6;
+	private ArrayList<int[]> rangeIndex = new ArrayList<int[]>(); // list for storing Dinosaur index if its in bubble
+	private int extra = 0;
+
+	/**
+	 * Public constructor for HumanBubble class.
+	 * 
+	 * @param level
+	 *            Level number
+	 */
+	public HumanBubble(int level) {
+		bubble = new char[(bubbleSize * 2) + 1][(bubbleSize * 2) + 1]; // 13x13
+	}
+
+	/**
+	 * Method for valid targets around human.
+	 */
+	public char[][] makeBubble(char[][] board, int i, int j) {
+		rangeIndex.clear();
+		// diamond shape human bubble.
+		int rowCounter = 0; // keeps track of which row to add to
+		int columnCounter = 0; // keeps track of which column to add to
+		int count = 0; // <-
+		for (int x = i - bubbleSize; x <= i + bubbleSize; x++) { // this makes the full 13x13 array around human
+			if (x < 0 || x >= board.length) {
+				for (int k = 0; k < bubble[0].length; k++) {
+					bubble[rowCounter][k] = 'F';
+				}
+				rowCounter++;
+				continue; // out of bounds
+			}
+			for (int y = j - bubbleSize; y <= j + bubbleSize; y++) {
+				if (y < 0 || y >= board[i].length) {
+
+					bubble[rowCounter][columnCounter] = 'F';
+					count++;
+
+					columnCounter++;
+					continue; // out of bounds
+				}
+
+				bubble[rowCounter][columnCounter] = board[x][y];
+				columnCounter++;
+			}
+			count = 0;
+			columnCounter = 0;
+			rowCounter++;
+
+		}
+		int counter = 1; // how many index in bubble
+		int index = 0; // starting point of row
+		for (int x = 0; x < bubble.length; x++) { // makes diamond shape // fills every valid location with a Z
+
+			if (x >= bubbleSize) {
+				index = x - bubbleSize;
+			} else {
+				index = bubbleSize - x;
+			}
+
+			for (int y = 0; y < counter; y++) { // adds a Z at every valid spot
+				if (bubble[x][index] == 'P') {
+					bubble[x][index] = 'P';
+					index++;
+				} else if (bubble[x][index] == 'T') {
+					bubble[x][index] = 'T';
+					index++;
+				} else if (bubble[x][index] == 0 || bubble[x][index] == 'E') {
+					// ^^^^^^ tree removed here || bubble[x][index] == 'T
+
+					bubble[x][index] = 'Z';
+					index++;
+				} else if (bubble[x][index] == 'A' || bubble[x][index] == 'B' || bubble[x][index] == 'V'
+						|| bubble[x][index] == 'X') {
+
+					int[] temp = { x, index };
+					addToList(temp, i, j);
+					// rangeIndex.add(temp);
+					bubble[x][index] = 'D';
+					index++;
+				} else {
+
+					index++;
+				}
+			}
+
+			if (x >= bubbleSize) {
+				index = x - bubbleSize;
+			} else {
+				index = bubbleSize - x;
+			}
+			// reset index to set non - valid indexs
+			int temp = index;
+			for (int z = 0; z < bubble[x].length; z++) { // adds F to every non-valid location
+				if (z == index) {
+					// in bubble
+					for (int w = 0; w < counter; w++) {
+
+						if (bubble[x][temp] != 'Z' && bubble[x][temp] != 'T' && bubble[x][temp] != 'P') {
+							bubble[x][temp] = 'F';
+						}
+						temp++;
+					}
+					z += counter - 1;
+					// loop counter times then z + index
+				} else {
+					// out bubble
+					bubble[x][z] = 'F';
+
+				}
+
+			}
+			if (x >= bubbleSize) {
+				counter -= 2;
+			} else {
+				counter += 2;
+			}
+
+		}
+		for (int x = 0; x < bubble.length; x++) {
+			for (int y = 0; y < bubble[x].length; y++) {
+				if (bubble[x][y] == 0) {
+					bubble[x][y] = 'F';
+				}
+			}
+		}
+		return bubble;
+
+	}
+
+	/**
+	 * Method for changing type of board from character to boolean.
+	 * 
+	 * @param bubble
+	 *            bubble character 2D array.
+	 * @return Boolean 2D array of board.
+	 */
+
+	public boolean[][] changeTypeBoard(char[][] bubble) {
+		boolean[][] boardBoolean = new boolean[bubble.length][bubble[0].length];
+
+		for (int i = 0; i < bubble.length; i++) {
+			for (int j = 0; j < bubble[i].length; j++) {
+				// if the char board has an F, it's because it is not part of the bubble
+				if (bubble[i][j] == 'F') {
+					boardBoolean[i][j] = false;
+				} else if (bubble[i][j] == 'Z') {
+					// if the char board has a X, it represents a spot the human is allowed to go on
+					boardBoolean[i][j] = true;
+				} else if (bubble[i][j] == 'D') {
+					// if the char board has a t (lower case), it represents a tree, which is
+					// something the human should be allowed to click on
+					boardBoolean[i][j] = false;
+				} else if (bubble[i][j] == 'R') {
+					// if the char board has an R, it is a rock, something the human cannot click on
+					// or pass through
+					boardBoolean[i][j] = false;
+				}
+			}
+		}
+
+		return boardBoolean;
+	}
+
+	/**
+	 * This method removes parts of the paths that the human will not be able to
+	 * travel in because of an obstacle by setting parts of the boolean[][]as false
+	 * 
+	 * @param board
+	 *            the boolean[][]representing the human bubble
+	 * @return board, the updated version of the boolean[][]
+	 */
+	public boolean[][] removeNotPossible(boolean[][] board) {
+		/*
+		 * in each of these if statements, we need to check if there are rocks or
+		 * dinosaurs around that path. if there are, we need to make the
+		 * boolean[][]false past those obstacles, depending on what direction the human
+		 * is heading in
+		 */
+		if (targetX < humanX && targetY == humanY) {
+			// move up
+		} else if (targetX > humanX && targetY == humanY) {
+			// move down
+		} else if (targetY > humanY && targetX == humanX) {
+			// move right
+		} else if (targetY < humanY && targetX == humanX) {
+			// move left
+		} else if (targetX > humanX && targetY > targetY) {
+			// move northeast
+		} else if (targetX < humanX && targetY < humanY) {
+			// move southwest
+		} else if (targetX > humanX && targetY < humanY) {
+			// move southeast
+		} else if (targetX < humanX && targetY > humanY) {
+			// move northwest
+		}
+
+		return board;
+	}
+
+	public void addToList(int[] index, int humanX, int humanY) {
+		int x = index[0];
+		int y = index[1];
+		int endX = 0;
+		int endY = 0;
+		// 3, 6 -> 6, 0
+		// 4, 8 -> 7 , 2
+		// 9 + 4 = 13 - 6 = 7
+		// 8 - 0 = 8 - 6
+
+		// 8 , 6 s (6,6)
+
+		// 7, 4 -> 9, 4
+		// 7 - 6 = 1 + 8 = 9;
+
+		if (x < MAX_MOVES) {
+			endX = x + humanX;
+			endX = endX - MAX_MOVES;
+			// endX = MAX_MOVES - x;
+		} else if (x > MAX_MOVES) {
+			endX = x - MAX_MOVES;
+			endX = endX + humanX;
+		} else {
+			endX = humanX;
+		}
+		if (y < MAX_MOVES) {
+			endY = y + humanY;
+			endY = endY - MAX_MOVES;
+		} else if (y > MAX_MOVES) {
+
+			endY = y - MAX_MOVES;
+			endY = endY + humanY;
+		} else {
+			endY = humanY;
+		}
+		int[] temp = { endX, endY };
+		rangeIndex.add(temp);
+	}
+
+	/**
+	 * @return the rangeIndex
+	 */
+	public ArrayList<int[]> getRangeIndex() {
+		return rangeIndex;
+	}
+
+	/**
+	 * @param rangeIndex
+	 *            the rangeIndex to set
+	 */
+	public void setRangeIndex(ArrayList<int[]> rangeIndex) {
+		this.rangeIndex = rangeIndex;
+	}
+
+	/**
+	 * @return the bubble
+	 */
+	public char[][] getBubble() {
+		return bubble;
+	}
+
+	/**
+	 * @param bubble
+	 *            the bubble to set
+	 */
+	public void setBubble(char[][] bubble) {
+		this.bubble = bubble;
+	}
+
+}

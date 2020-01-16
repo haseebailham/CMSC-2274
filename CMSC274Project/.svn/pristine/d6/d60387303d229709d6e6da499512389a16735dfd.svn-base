@@ -1,0 +1,77 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.human.Human;
+import edu.ben.human.HumanBubble;
+import edu.ben.human.Pathing;
+
+public class PathingTest {
+
+	@Test
+	public void testTree() {
+		BackEndBoard backEnd = new BackEndBoard(1);
+		char[][] board = backEnd.getBoard();
+		board[8][0] = 'T';
+		// backEnd.displayBoard();
+		Human human = backEnd.getHuman();
+		human.makeBubble();
+		Pathing move = new Pathing(human.getBubble().getBubble(), 6, 6, 7, 6);
+		move.findPath();
+		boolean actual = move.isStuck();
+		assertFalse(actual);
+	}
+
+	@Test
+	/**
+	 * test a not being stuck by trees
+	 */
+	public void test4x4() {
+		char[][] board = new char[4][4];
+		board[2][0] = 'T';
+		board[2][1] = 'T';
+		board[2][2] = 'T';
+		HumanBubble bubb = new HumanBubble(1);
+		char[][] bubble = bubb.makeBubble(board, 1, 2);
+
+		
+
+		Pathing move = new Pathing(bubble, 3, 0, 1, 2);
+		move.findPath();
+		boolean actual = move.isStuck();
+		assertFalse(actual);
+	}
+
+	@Test
+	/**
+	 * test first level 1 human start invaild move
+	 */
+	public void testHumanlvl1False() {
+
+		HumanBubble bubb = new HumanBubble(1);
+		BackEndBoard backEnd = new BackEndBoard(1);
+		bubb.makeBubble(backEnd.getBoard(), 9, 0); // human is at 6,6
+		Pathing move = new Pathing(bubb.getBubble(), 6, 6, 1, 6);
+		boolean actual = move.findPath();
+		assertFalse(actual);
+	}
+
+	@Test
+	/**
+	 * test first level 1 human start under MAX_MOVES
+	 */
+	public void testHumanlvl1True() {
+		HumanBubble bubb = new HumanBubble(1);
+		BackEndBoard backEnd = new BackEndBoard(1);
+		bubb.makeBubble(backEnd.getBoard(), 9, 0); // human is at 6,6 (center
+													// of bubble
+
+		Pathing move = new Pathing(bubb.getBubble(), 6, 6, 3, 8);
+		boolean actual = move.findPath();
+		assertTrue(actual);
+	}
+}

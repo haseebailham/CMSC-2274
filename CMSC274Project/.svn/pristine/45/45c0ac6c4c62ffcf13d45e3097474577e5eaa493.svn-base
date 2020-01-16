@@ -1,0 +1,396 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+/**
+ * Class for the human object does movement and holds all the information need
+ * about human
+ * 
+ * @author abdul
+ *
+ */
+public class Human {
+	private int extra = 0;
+	private int moves = 6; // amount of moves
+	private int humanX = 0; // current location
+	private int humanY = 0;
+	private int targetX = 0; // target location
+	private int targetY = 0;
+	private HealthBar health = new HealthBar(); // not sure how to implement the health bar
+	private char humanChar = 'H';
+	private int level = 1;
+	private final int MAX_MOVES = 6;
+	private Queue<int[]> prevPosition = new LinkedList<int[]>();
+	private char[][] board; // the char[][] used for movement
+	private boolean[][] booleanBubble; // has the boolean values of possible locations to move to
+	private HumanBubble bubble = new HumanBubble(level);
+	private Points points = new Points();
+	private int currentPoints = 2;
+	private boolean stuck = false; // boolean if human is stuck
+
+	/**
+	 * 
+	 * @param level
+	 *            the level the human is on
+	 * @param board
+	 *            the level board the board the human starts with is the one used
+	 *            when the level is first made
+	 */
+	public Human(int level, char[][] board) {
+		this.level = level;
+		this.board = board;
+	}
+
+	/**
+	 * return true if a valid move
+	 * 
+	 * @return
+	 */
+	public boolean moveHuman() {
+
+		makeBooleanBubble();
+		int startX;
+		int startY;
+		int endX = 0;
+		int endY = 0;
+		// need to convert index from board to the sub array the human uses for human
+		// because in sub array human is always in the center which is 6,6 so target
+		// need to be converted to fit into the human bubble
+		if (humanX > targetX) {
+			endX = humanX - targetX;
+			endX = MAX_MOVES - endX;
+		} else if (humanX < targetX) {
+			endX = targetX - humanX;
+			endX = MAX_MOVES + endX;
+		} else if (humanX == targetX) {
+			endX = MAX_MOVES;
+		}
+
+		if (humanY > targetY) {
+			endY = humanY - targetY;
+			endY = MAX_MOVES - endY;
+		} else if (humanY < targetY) {
+			endY = targetY - humanY;
+			endY = endY + MAX_MOVES;
+		} else if (humanY == targetY) {
+			endY = MAX_MOVES;
+		}
+
+		if (endX < 0 || endX >= booleanBubble.length || endY < 0 || endY >= booleanBubble.length) { // checks for out of
+																									// bounds
+			return false;
+		}
+		// human start is always 6,6
+		Pathing path = new Pathing(booleanBubble, MAX_MOVES, MAX_MOVES, endX, endY);
+		boolean validMove = path.findPath();
+		if (path.isStuck()) {
+			stuck = path.isStuck();
+			return path.isStuck();
+		} else {
+			return validMove;
+		}
+	}
+
+	/**
+	 * makes the boolean bubble array
+	 * 
+	 * @return boolean 2-d array
+	 */
+	public boolean[][] makeBooleanBubble() {
+		char[][] tempBubble = bubble.makeBubble(board, humanX, humanY);
+		booleanBubble = bubble.changeTypeBoard(tempBubble);
+		return booleanBubble;
+	}
+
+	public ArrayList<int[]> lookForDinosaur() {
+		ArrayList<int[]> rangeList = bubble.getRangeIndex();
+
+		if (rangeList.size() != 0) {
+			return rangeList;
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * Instantiates new MovementLevel1 object every time,
+	 *
+	 * @param targetX
+	 *            target X player position.
+	 * @param targetY
+	 *            target Y player position.
+	 */
+	public void setTarget(int targetX, int targetY) {
+		// instantiates new movement for each new current player position and new
+		// target.
+		// position.
+		// MovementLevel1 humanMovement = new MovementLevel1(humanX, humanY, targetX,
+		// targetY);
+		// calls isValid method from MovementLevel1 class.
+		this.targetX = targetX;
+		this.targetY = targetY;
+	}
+
+	/**
+	 * Adds new clicked position to queue
+	 * 
+	 * @param x
+	 *            row in grid
+	 * @param y
+	 *            column in grid.
+	 */
+	public void addNewPosition(int x, int y) {
+		int[] newPos = { x, y };
+		humanX = x;
+		humanY = y;
+		prevPosition.add(newPos);
+	}
+
+	/**
+	 * Removes position from queue.
+	 * 
+	 * @return int[] of 2 values.
+	 */
+	public int[] removePrevPosition() {
+		return prevPosition.remove();
+	}
+	
+	/**
+	 * Checks if human died based on health. 
+	 * @param health
+	 * 				int value
+	 * @return true if human is dead, false if not
+	 */
+	public boolean isDead() {
+		return health.getHealthBar() == 0;
+	}
+
+	/**
+	 * @return the turns
+	 */
+	public int getTurns() {
+		return moves;
+	}
+
+	/**
+	 * @param turns
+	 *            the turns to set
+	 */
+	public void setTurns(int turns) {
+		this.moves = turns;
+	}
+
+	/**
+	 * @return the humanChar
+	 */
+	public char getHumanChar() {
+		return humanChar;
+	}
+
+	/**
+	 * @param humanChar
+	 *            the humanChar to set
+	 */
+	public void setHumanChar(char humanChar) {
+		this.humanChar = humanChar;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the humanX
+	 */
+	public int getHumanX() {
+		return humanX;
+	}
+
+	/**
+	 * @param humanX
+	 *            the humanX to set
+	 */
+	public void setHumanX(int humanX) {
+		this.humanX = humanX;
+	}
+
+	/**
+	 * @return the humanY
+	 */
+	public int getHumanY() {
+		return humanY;
+	}
+
+	/**
+	 * @param humanY
+	 *            the humanY to set
+	 */
+	public void setHumanY(int humanY) {
+		this.humanY = humanY;
+	}
+
+	/**
+	 * @return the prevPosition
+	 */
+	public Queue<int[]> getPrevPosition() {
+		return prevPosition;
+	}
+
+	/**
+	 * @param prevPosition
+	 *            the prevPosition to set
+	 */
+	public void setPrevPosition(Queue<int[]> prevPosition) {
+		this.prevPosition = prevPosition;
+	}
+
+	/**
+	 * @return the targetX
+	 */
+	public int getTargetX() {
+		return targetX;
+	}
+
+	/**
+	 * @param targetX
+	 *            the targetX to set
+	 */
+	public void setTargetX(int targetX) {
+		this.targetX = targetX;
+	}
+
+	/**
+	 * @return the targetY
+	 */
+	public int getTargetY() {
+		return targetY;
+	}
+
+	/**
+	 * @param targetY
+	 *            the targetY to set
+	 */
+	public void setTargetY(int targetY) {
+		this.targetY = targetY;
+	}
+
+	/**
+	 * @return the board
+	 */
+	public char[][] getBoard() {
+		return board;
+	}
+
+	/**
+	 * @param board
+	 *            the board to set
+	 */
+	public void setBoard(char[][] board) {
+		this.board = board;
+	}
+
+	/**
+	 * @return the health
+	 */
+	public HealthBar getHealth() {
+		return health;
+	}
+
+	/**
+	 * @param health
+	 *            the health to set
+	 */
+	public void setHealth(HealthBar health) {
+		this.health = health;
+	}
+
+	/**
+	 * @return the booleanBubble
+	 */
+	public boolean[][] getBooleanBubble() {
+		return booleanBubble;
+	}
+
+	/**
+	 * @param booleanBubble
+	 *            the booleanBubble to set
+	 */
+	public void setBooleanBubble(boolean[][] booleanBubble) {
+		this.booleanBubble = booleanBubble;
+	}
+
+	/**
+	 * @return the bubble
+	 */
+	public HumanBubble getBubble() {
+		return bubble;
+	}
+
+	/**
+	 * @param bubble
+	 *            the bubble to set
+	 */
+	public void setBubble(char[][] bubble) {
+		this.bubble.setBubble(bubble);
+	}
+
+	/**
+	 * @return the stuck
+	 */
+	public boolean isStuck() {
+		return stuck;
+	}
+
+	/**
+	 * @param stuck
+	 *            the stuck to set
+	 */
+	public void setStuck(boolean stuck) {
+		this.stuck = stuck;
+	}
+
+	/**
+	 * @return the points
+	 */
+	public Points getPoints() {
+		return points;
+	}
+
+	/**
+	 * @param points
+	 *            the points to set
+	 */
+	public void setPoints(Points points) {
+		this.points = points;
+	}
+
+	/**
+	 * @return the currentPoints
+	 */
+	public int getCurrentPoints() {
+		return currentPoints;
+	}
+
+	/**
+	 * @param currentPoints
+	 *            the currentPoints to set
+	 */
+	public void setCurrentPoints(int currentPoints) {
+		this.currentPoints = currentPoints;
+	}
+
+}

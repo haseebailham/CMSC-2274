@@ -1,0 +1,13 @@
+package edu.ben.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import edu.ben.model.BackEndBoard;
+import edu.ben.human.Human;
+
+public class HumanTest {
+
+	
+}

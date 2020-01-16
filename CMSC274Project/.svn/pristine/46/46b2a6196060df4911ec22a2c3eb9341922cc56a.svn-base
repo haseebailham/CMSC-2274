@@ -1,0 +1,93 @@
+package model;
+
+import java.awt.EventQueue;
+
+import visual.LevelTwoGUI;
+
+/**
+ * Level 2 class.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class Level2 implements Level {
+
+	/**
+	 * board array for levels
+	 */
+	private BackEndBoard board;
+	/**
+	 * Level number 1.
+	 */
+	private int level = 2;
+
+	/**
+	 * Public Constructor for Level1 Class.
+	 */
+	public Level2() {
+		// sets up board at each level 1 object instantiation.
+		board = new BackEndBoard(level);
+	}
+
+	/**
+	 * Starts level 2.
+	 * 
+	 * @param args
+	 *            String
+	 */
+	public static void main(String[] args) {
+		Level2 lvl = new Level2();
+		lvl.playLevel();
+	}
+
+	// play level 1
+	// set gui frame visible, and start level 1.
+	/**
+	 * Method which sets GUI Frame visible and EventQueue.invokeLater(new
+	 * Runnable());
+	 */
+	@Override
+	public void playLevel() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					LevelTwoGUI frame = new LevelTwoGUI();
+					frame.setTitle("Dinosaur Game: Level 2");
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * @return the board
+	 */
+	public BackEndBoard getBoard() {
+		return board;
+	}
+
+	/**
+	 * @param board
+	 *            the board to set
+	 */
+	public void setBoard(BackEndBoard board) {
+		this.board = board;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level
+	 *            the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+}

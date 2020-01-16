@@ -1,0 +1,156 @@
+package testing;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import model.LavaMovement;
+
+/**
+ * Test class for LavaMovement class.
+ * @author haseebailham
+ * @version 1.0
+ */
+public class LavaMovementTest {
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethodAllSpotsPrint() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		for (int i = 0; i < LavaMovement.NUM_COL; i++) {
+			lm.spread(board);
+			lm.printBoard(board);
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod1() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[8][0];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod2() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[7][2];
+		assertEquals(expected, actual);
+		
+	}
+
+	/**
+	 * Tests spread method with the starting point: (0, 9);
+	 */
+	@Test
+	public void testSpreadMethod4() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[6][3];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod5() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[5][4];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod6() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[4][5];
+		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Tests spread method with the starting point: (9, 0);
+	 */
+	@Test
+	public void testSpreadMethod7() {
+		char[][] board = new char[10][15];
+		LavaMovement lm = new LavaMovement(9);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		lm.spread(board);
+		char expected = 'L';
+		char actual = board[3][6];
+		assertEquals(expected, actual);
+	}
+	
+	/**
+	 * Tests spread method - return true if human was in lava.
+	 */
+	@Test
+	public void testSpreadHumanInWayOfLava() {
+		char[][] board = new char[10][15];
+		board[8][0] = 'H';
+		LavaMovement lm = new LavaMovement(9);
+		boolean actual = lm.spread(board);
+		assertFalse(actual);
+		
+	}
+	
+	/**
+	 * Tests spread method - return false, rock in lava
+	 */
+	@Test
+	public void testSpreadHumanInWayOfLava2() {
+		char[][] board = new char[10][15];
+		board[8][0] = 'R';
+		LavaMovement lm = new LavaMovement(9);
+		boolean actual = lm.spread(board);
+		assertTrue(actual);
+	}
+	
+	
+}

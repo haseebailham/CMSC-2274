@@ -1,0 +1,14 @@
+package visual;
+
+import javax.swing.JPanel;
+
+public class ScoresPanel extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public ScoresPanel() {
+		
+	}
+
+}

@@ -1,0 +1,64 @@
+package model;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
+import visual.DinosaurGameGUI;
+import visual.Lvl1Frame;
+import visual.SplashScreenGUI;
+
+/**
+ * Button Listener for Buttons in Splash Screen of Dinosaur Game.
+ * 
+ * @author haseebailham
+ * @version 1.0
+ */
+public class SplashScreenButtonListener implements ActionListener {
+
+	private JButton btnClicked;
+	private String btnName;
+	private DinosaurGame game;
+
+	// btns[] = speaker, start game, exit game, scores.
+	public SplashScreenButtonListener(JButton btnClicked, String btnName, DinosaurGame game) {
+		this.btnClicked = btnClicked;
+		this.btnName = btnName;
+		this.game = game;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String event = e.getActionCommand();
+
+		if (event.equals("speaker")) { // turns off speaker
+			ImageIcon speakerOff = new ImageIcon("speakerOff.png");
+			btnClicked.setIcon(speakerOff);
+			btnClicked.setActionCommand("speakerOff");
+			//btnClicked.setVisible(false);
+			//btnClicked.setEnabled(false);
+
+
+		}
+		if (event.equals("speakerOff")) { // turns speaker back on
+			ImageIcon speakerOn = new ImageIcon("speaker.png");
+			btnClicked.setIcon(speakerOn);
+			btnClicked.setActionCommand("speaker");
+		}
+		if (event.equals("start")) {
+			game.closeFrame();
+			game.nextLevel();
+
+		}
+		if (event.equals("scores")) {
+			// closes content pane and sets scores panel visible to true.
+		}
+		if (event.equals("quit")) {
+			game.quitGame();
+		}
+	}
+
+}

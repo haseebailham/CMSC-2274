@@ -1,0 +1,1034 @@
+package edu.ben.model;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.UIManager;
+
+import edu.ben.dino.Dino;
+import edu.ben.dino.DinoList;
+import edu.ben.human.Human;
+
+/**
+ * Button Listener. Implements Action Listener, and is used for each button in
+ * all levels. Action performed method performs tasks when button is clicked by
+ * user in the GUI.
+ * 
+ * @author haseebailham
+ * @author akhan
+ * @author mraheem
+ * @version 1.0
+ */
+public class ButtonListener implements ActionListener {
+
+	/**
+	 * Health limit for Yellow color foreground in Progress Bar.
+	 */
+	public static final int HEALTH_YELLOW = 60;
+
+	/**
+	 * Health limit for Red color foreground in Progress Bar.
+	 */
+	public static final int HEALTH_RED = 30;
+
+	/**
+	 * Position x, current position of player x.
+	 */
+	private int posX;
+
+	/**
+	 * Position y, current position of player y.
+	 */
+	private int posY;
+
+	/**
+	 * JButton[][] buttons, GUI.
+	 */
+	private JButton[][] btns;
+
+	/**
+	 * class uses to call Board
+	 */
+	private BackEndBoard backEnd;
+	/**
+	 * Human class
+	 */
+	private Human human;
+
+	/**
+	 * current board
+	 */
+	private char[][] board;
+
+	/**
+	 * 
+	 * JProgress Bar for Health.
+	 */
+	private JProgressBar progressBar;
+	/**
+	 * game object
+	 */
+	private DinosaurGame game;
+
+	/**
+	 * JLabel for points.
+	 */
+	private JLabel pointsLabel;
+
+	/**
+	 * dinosaur list
+	 */
+	private DinoList dl;
+
+	/**
+	 * Level number
+	 */
+	private int level = 0;
+
+	/**
+	 * boolean for if points have already been calculated
+	 */
+	private boolean alreadyCalc = false;
+
+	/**
+	 * Messages object
+	 */
+	private Messages m = new Messages();
+
+	private boolean pterodactyl = false;
+
+	/**
+	 * Public constructor for ButtonListenerLevel1 class.
+	 * 
+	 * @param lvl
+	 *            Level 1
+	 * @param posX
+	 *            Position x
+	 * @param posY
+	 *            Position y
+	 * @param btns
+	 *            buttons
+	 */
+	public ButtonListener(DinosaurGame game, int posX, int posY, JButton[][] btns, JProgressBar progressBar,
+			JLabel pointsLabel) {
+		this.posX = posX;
+		this.posY = posY;
+		this.btns = btns;
+		this.game = game;
+		this.backEnd = game.getBoard();
+		this.human = backEnd.getHuman();
+		this.board = backEnd.getBoard();
+		this.progressBar = progressBar;
+		this.dl = backEnd.getDl();
+		this.pointsLabel = pointsLabel;
+		level = game.getLevel();
+
+	}
+
+	/**
+	 * Action performed method from ActionListener interface.
+	 * 
+	 * @param e
+	 *            event passed in, which is the button clicked by user in GUI.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String event = e.getActionCommand();
+		if (event.equals("speaker")) { // turns off speaker
+			Sounds.off();
+			ImageIcon speakerOff = new ImageIcon("speakerOff.png");
+			JButton temp = (JButton) e.getSource();
+			temp.setIcon(speakerOff);
+			temp.setActionCommand("speakerOff");
+		} else if (event.equals("speakerOff")) { // turns speaker back on
+			Sounds.start();
+
+			ImageIcon speakerOn = new ImageIcon("speaker.png");
+			JButton temp = (JButton) e.getSource();
+			temp.setIcon(speakerOn);
+			temp.setActionCommand("speaker");
+		} else if (event.equals("quit")) {
+			game.quitLevel();
+
+		} else {
+			dl.makeBubbles(board);
+			if (isDinosaurZone()) {
+				updateHealth(level);
+				dinosaurDamageMessage();
+			}
+
+			if (!human.isDead()) {
+				human.setTarget(posX, posY);
+				// checks if player clicked on valid button
+				if (human.moveHuman()) {
+					// if human is stuck
+					if (human.isStuck()) { // if the human is stuck
+						deathSound();
+						HumanStuckMessage();
+						game.closeFrame();
+						// if human clicked on an egg
+					} else if (isEgg()) {
+						human.setCurrentPoints(human.getPoints().calculatePoints(human.getCurrentPoints(), true));
+						updatePointsPanel();
+						alreadyCalc = true;
+						moveHuman();
+						// if human clicked on a berry bush
+					} else if (isTree()) {
+						handleRiddle(level);
+						// if human died
+						if (human.isDead()) {
+							lostGameMessage();
+							game.quitGame();
+							System.exit(level);
+						}
+						// if human clicked on exit button
+					} else if (isExit()) {
+						victorySound();
+						moveHuman();
+						passLevel();
+
+						if (level < 3) {
+							game.closeFrame();
+							game.nextLevel();
+						}
+						// if the game is on the third level, the frame should close
+						if (level == 3) {
+							game.quitGame();
+						}
+					} else {// the human cannot move to its target spot because the dinosaurs hit him before
+							// they could get there
+						moveHuman();
+						if (human.isDead()) {
+							deathSound();
+							lostGameMessage();
+							game.quitGame();
+						}
+					}
+				} else { // no path
+					invalidMove();
+				}
+			}
+			// the human cannot move to its target spot because the dinosaurs hit him before
+			// they could get there
+			if (human.isDead()) {
+				deathSound();
+				lostGameMessage();
+				game.quitGame();
+			}
+		}
+	}
+
+	/**
+	 * Removes icon from GUI, and removes previous position clicked by player.
+	 * 
+	 * @param btns
+	 *            Buttons in frame of Lvl1GUI.
+	 */
+	public void removeIcon(JButton[][] btns) {
+		/*
+		 * removes prev player position, removes icon, and updates board with the new
+		 * character position.
+		 */
+
+		// get position from level object:
+		int[] prev = human.removePrevPosition();
+		/* If the player is on level 3, then the background is rocky not grassy */
+		if (game.getLevel() == 3) {
+			ImageIcon ground = new ImageIcon("ground.jpg");
+			btns[prev[0]][prev[1]].setIcon(ground);
+			backEnd.removeIndex(prev);
+		} else if (game.getLevel() == 2) {// button's icon is back to level 2 grass
+			ImageIcon l2grass = new ImageIcon("l2grass.PNG");
+			btns[prev[0]][prev[1]].setIcon(l2grass);
+			backEnd.removeIndex(prev);
+		} else {
+			// button's icon is back to level 1 grass
+			ImageIcon grass = new ImageIcon("grass.jpg");
+			btns[prev[0]][prev[1]].setIcon(grass);
+			backEnd.removeIndex(prev);
+		}
+	}
+
+	/**
+	 * Checks if the button clicked has an egg on it
+	 * 
+	 * @return true if there was an egg on the button clicked
+	 */
+	public boolean isEgg() {
+		return board[posX][posY] == 'P';
+	}
+
+	/**
+	 * Is button clear, check dinosaur board object if there are any character in
+	 * the position.
+	 * 
+	 * @return true if it is clear, false if not.
+	 */
+	public boolean isClear() {
+		return backEnd.clearSpot(posX, posY);
+	}
+
+	/**
+	 * Checks if the button clicked on has a tree
+	 * 
+	 * @return true if the button has a tree
+	 */
+	public boolean isTree() {
+		if (board[posX][posY] == 'T') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if player clicked in a dinosaur zone.
+	 * 
+	 * @return true if in a dinosaur zone.
+	 */
+	public boolean isDinosaurZone() { // put into dinoList
+		dl.makeBubbles(board);
+		boolean foundHuman = false;
+		for (int i = 0; i < dl.getSize(); i++) {
+			if (dl.checkForHuman(i)) {
+				return true;
+			}
+
+		}
+
+		return foundHuman;
+	}
+
+	/**
+	 * This method checks if the button clicked was part of the exit
+	 * 
+	 * @return true if the button was an exit button
+	 */
+	public boolean isExit() {
+		if (board[posX][posY] == 'E') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * This method goes through the steps to move the human to its new spot, and
+	 * uses other methods to help it. It also lets the dinosaurs move after the
+	 * human has moved
+	 */
+	public void moveHuman() {
+		if (game.getLevel() == 2) {
+			pterodactyl();
+		}
+
+		/*
+		 * calls method from level which uses back end and pathing classes to check for
+		 * validity for movement to target (button clicked)
+		 */
+		removeIcon(btns);
+		// (UPDATES BOARD) (then change posX, posY values and update Button)
+		backEnd.placeCharBoard(posX, posY, 'H');
+		moveDinosaurs();
+		// (UPDATES BUTTON IMAGE) add new position to queue
+		updateHumanIcon(posX, posY, game.getLevel());
+		/*
+		 * If the game is on level 3, then there is the possibility of the human moving
+		 * onto lava
+		 */
+		if (game.getLevel() == 3) {
+			if (!backEnd.moveLava(dl.getPrevDinosaurLoctaion(0))) {
+				// human dies:
+				deathSound();
+				updateLavaButtons();
+				m.humanKilledInLavaMessage(human.getCurrentPoints());
+				game.closeFrame();
+			} else {
+				updateLavaButtons();
+			}
+		}
+		/*
+		 * If the points have already been calculated since the human picked up an egg,
+		 * the points will not be recalculated because then the player would end up with
+		 * more points than they should
+		 */
+		if (!alreadyCalc) {
+			human.setCurrentPoints(human.getPoints().calculatePoints(human.getCurrentPoints(), false));
+			updatePointsPanel();
+		}
+
+	}
+
+	/**
+	 * Updates lava buttons on GUI.
+	 */
+	public void updateLavaButtons() {
+		Stack<int[]> lava = backEnd.newLavaPositions();
+		ImageIcon lavaImage = new ImageIcon("lava.gif");
+
+		// adds icons to new lava positions
+		while (!lava.isEmpty()) {
+			int[] curr = lava.pop();
+			btns[curr[0]][curr[1]].setIcon(lavaImage);
+			if (Arrays.equals(curr, dl.getCurrentDinosaurLoctaion(0))) {
+				ImageIcon trex = new ImageIcon("trex3.PNG");
+				btns[curr[0]][curr[1]].setIcon(trex);
+			}
+		}
+		// if dino was in lava positions, change icon from dino to lava.
+		int[] dinoPrev = dl.getPrevDinosaurLoctaion(0);
+		if (backEnd.isDino(dinoPrev)) {
+			btns[dinoPrev[0]][dinoPrev[1]].setIcon(lavaImage);
+		}
+	}
+
+	/**
+	 * This method moves the dinosaurs around on the board and calls other methods
+	 * to help update other classes
+	 */
+	public void moveDinosaurs() {
+		int[] prevDinosaurLoc = new int[2]; // hold prev dinosaurs location
+		int[] newDinosaurLoc = new int[2]; // holds new dinosaurs location
+		for (int i = 0; i < dl.getSize(); i++) {
+			dl.moveDinosaurs(board, human.getHumanX(), human.getHumanY(), i);
+			char obj = dl.getIndex(i).getCharName();
+			prevDinosaurLoc = dl.getPrevDinosaurLoctaion(i); // gets the location for each dinosaur
+			newDinosaurLoc = dl.getCurrentDinosaurLoctaion(i);
+			backEnd.placeCharBoard(newDinosaurLoc[0], newDinosaurLoc[1], obj);
+			backEnd.removeIndex(prevDinosaurLoc[0], prevDinosaurLoc[1]);
+			updateButton(btns, newDinosaurLoc, obj);
+			removeIcon(btns, prevDinosaurLoc, i, obj);
+		}
+		displayBubble(btns);
+
+		if (pterodactyl) {
+			updateProgressBar(human.getHealth().getHealthBar());
+		}
+
+	}
+
+	/**
+	 * method is used to display a dinosaur bubble if the dinosaur is within range
+	 * of the human
+	 * 
+	 * @param btns
+	 *            JButton 2-d array
+	 * @return btns with updated icons
+	 */
+	public JButton[][] displayBubble(JButton[][] btns) {
+		dl.makeBubbles(board);
+		human.makeBooleanBubble();
+		ArrayList<Dino> temp = dl.checkNearHuman(human.getBubble().getRangeIndex());
+		ArrayList<int[]> indexList = new ArrayList<int[]>();
+		for (int i = 0; i < btns.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 0) {
+					if (game.getLevel() == 3) {
+						ImageIcon ground = new ImageIcon("ground.jpg");
+						btns[i][j].setIcon(ground);
+					} else {
+						updateGrassIcon(i, j, game.getLevel());
+					}
+				}
+			}
+		}
+		if (temp.size() > 0) {
+			ImageIcon bubbleGrass = null;
+			if (game.getLevel() == 1) {
+				bubbleGrass = new ImageIcon("grassYellow.jpg");
+
+			} else if (level == 2) {
+				bubbleGrass = new ImageIcon("grassOrg.jpg");
+
+			} else if (level == 3) {
+				bubbleGrass = new ImageIcon("groundRed.png");
+			}
+			for (int i = 0; i < temp.size(); i++) {
+				indexList = temp.get(i).getBubble().getIndexList();
+				for (int j = 0; j < indexList.size(); j++) {
+					int x = indexList.get(j)[0];
+					int y = indexList.get(j)[1];
+					if (board[x][y] == 0) {
+						btns[x][y].setIcon(bubbleGrass);
+					}
+
+				}
+
+			}
+
+		}
+		return btns;
+
+	}
+
+	/**
+	 * Removes dinosaur icon.
+	 * 
+	 * @param btns
+	 *            buttons
+	 * @param prev
+	 *            previous button the dinosaur was on
+	 * @param index
+	 *            index
+	 * @param obj
+	 *            character representing the dinosaur on the game board
+	 */
+	public void removeIcon(JButton[][] btns, int[] prev, int index, char obj) {
+		updateGrassIcon(prev[0], prev[1], game.getLevel());
+	}
+
+	/**
+	 * Updates buttons
+	 * 
+	 * @param btns
+	 *            Buttons
+	 * @param newLocation
+	 *            New location
+	 * @param obj
+	 *            Character representing the Object on the game board
+	 */
+	public void updateButton(JButton[][] btns, int[] newLocation, char obj) {
+		int x = newLocation[0];
+		int y = newLocation[1];
+		if (obj == 'A') {
+			final ImageIcon ank = new ImageIcon("ankyl.png");
+			btns[x][y].setIcon(ank);
+		} else if (obj == 'B') {
+			final ImageIcon brach = new ImageIcon("brachGrass.PNG");
+			btns[x][y].setIcon(brach);
+		} else if (obj == 'V') {
+			ImageIcon velo = new ImageIcon("velociraptor.PNG");
+			btns[x][y].setIcon(velo);
+		} else if (obj == 'X') {
+			ImageIcon trex = new ImageIcon("trex3.PNG");
+			btns[x][y].setIcon(trex);
+		}
+	}
+
+	/**
+	 * This method shows the riddle the user needs to answer
+	 * 
+	 * @param riddle
+	 *            the riddle that needs to be answered
+	 * @return the answer that the user gave
+	 */
+	public String treeRiddle(String riddle) {
+		String answer = m.showRiddle(riddle);
+		return answer;
+	}
+
+	/**
+	 * This method determines if the answer the user gave was correct
+	 * 
+	 * @param correct
+	 *            whether or not the answer was correct
+	 */
+	public void treeAnswer(boolean correct) {
+		m.respondRiddle(correct);
+	}
+
+	/**
+	 * This method displays a message to the user so they know they have passed this
+	 * level
+	 * 
+	 * @param pass
+	 *            whether or not the user passed the level
+	 */
+	public void passLevel() {
+		if (game.getLevel() == 3) {
+			m.escapeIsland(human.getCurrentPoints());
+		} else {
+			m.escapeLevel(human.getCurrentPoints());
+		}
+	}
+
+	/**
+	 * This method will display a message if the player clicked on a square that
+	 * they are not able to get to
+	 */
+	public void invalidMove() {
+		m.invalidMessage();
+	}
+
+	/**
+	 * This method displays the messsage if the player lost the game
+	 */
+	public void lostGameMessage() {
+		m.lostGameMessage(human.getCurrentPoints());
+	}
+
+	/**
+	 * method used to call sound to play dying audio
+	 */
+	public void deathSound() {
+		Sounds.off();
+		Sounds.DIE_SOUND.play();
+	}
+
+	/**
+	 * method used to call sound to play victory music
+	 */
+	public void victorySound() {
+		Sounds.off();
+		Sounds.ESCAPE.play();
+	}
+
+	/**
+	 * This method displays the messsage if the player lost the game
+	 */
+	public void HumanStuckMessage() {
+		m.humanTrappedMessage(human.getCurrentPoints());
+	}
+
+	/**
+	 * This method displays a message to the player if dinosaur damage was inflicted
+	 * because human was in their zone.
+	 */
+	public void dinosaurDamageMessage() {
+		if (game.getLevel() == 1) {
+			m.herbMessage();
+		} else if (game.getLevel() == 2) {
+			m.veloMessage();
+		} else if (game.getLevel() == 3) {
+			m.rexMessage();
+		}
+	}
+
+	/**
+	 * This method will periodically send a pterodactyl towards the human
+	 */
+	public void pterodactyl() {
+		if (m.pterodactlyMessage()) {
+			human.getHealth().changeHealth("pterodactyl");
+			pterodactyl = true;
+		}
+	}
+
+	/**
+	 * This method will change the health of the human depending on which dinosaur
+	 * is around them
+	 * 
+	 * @param level
+	 *            the level that the player is currently on
+	 */
+	public void updateHealth(int level) {
+		if (level == 1) {
+			human.getHealth().changeHealth("herbivore");
+		} else if (level == 2) {
+			human.getHealth().changeHealth("carnivore");
+		} else if (level == 3) {
+			human.getHealth().changeHealth("trex");
+		}
+
+		updateProgressBar(human.getHealth().getHealthBar());
+	}
+
+	/**
+	 * Updates progress bar in GUI.
+	 * 
+	 * @param health
+	 *            current health of human.
+	 */
+	public void updateProgressBar(int health) {
+		if (health <= HEALTH_YELLOW && health > HEALTH_RED) { // less than 60 and greater than 30
+			progressBar.setForeground(Color.YELLOW);
+			progressBar.setValue(health);
+		} else if (health < HEALTH_RED && health >= 0) { // less than equal to 30
+			progressBar.setForeground(Color.RED);
+			progressBar.setValue(health);
+		} else if (health >= HEALTH_YELLOW) { // greater than 60
+			progressBar.setForeground(Color.GREEN.brighter());
+			progressBar.setValue(health);
+		}
+	}
+
+	/**
+	 * Update Points in GUI
+	 */
+	public void updatePointsPanel() {
+		int currPoints = human.getCurrentPoints();
+		pointsLabel.setText(String.valueOf(currPoints));
+	}
+
+	/**
+	 * This method will display the riddle to the player and decide if the asnwer
+	 * given was correct
+	 * 
+	 * @param level
+	 *            the level that the player is currently on
+	 */
+	public void handleRiddle(int level) {
+		boolean correct;
+		if (level == 1) {
+			String riddle = human.getHealth().getR().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR().correctRiddleAnswer(riddle, playerAnswer);
+		} else if (level == 2) {
+			String riddle = human.getHealth().getR2().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR2().correctRiddleAnswer(riddle, playerAnswer);
+		} else {
+			String riddle = human.getHealth().getR3().giveRiddle();
+			String playerAnswer = treeRiddle(riddle);
+			correct = human.getHealth().getR3().correctRiddleAnswer(riddle, playerAnswer);
+		}
+		treeAnswer(correct);
+		if (correct) {
+			human.getHealth().changeHealth("fruit");
+			human.setTarget(posX, posY);
+			moveHuman();
+			updateProgressBar(human.getHealth().getHealthBar());
+		} else {
+			board[posX][posY] = '\u0000';
+			updateGrassIcon(posX, posY, game.getLevel());
+		}
+	}
+
+	/**
+	 * Updates the human icons
+	 * 
+	 * @param i
+	 *            row i
+	 * @param j
+	 *            column j
+	 * @param level
+	 *            current level in game
+	 */
+	public void updateHumanIcon(int i, int j, int level) {
+		final ImageIcon confetti = new ImageIcon("confettiExit.png");
+		if (level == 1) {
+			if (j == 16) {
+				btns[i][j].setIcon(confetti);
+			} else {
+				if (isDinosaurZone()) {
+					final ImageIcon humanRed = new ImageIcon("humanOnGrassRed.PNG");
+					btns[i][j].setIcon(humanRed);
+				} else {
+					final ImageIcon human = new ImageIcon("humanGrass.PNG");
+					btns[i][j].setIcon(human);
+				}
+			}
+		} else if (level == 2) {
+			if (j == 16 && i >= 2 && i <= 7) {
+				btns[i][j].setIcon(confetti);
+			} else {
+				if (isDinosaurZone()) {
+					final ImageIcon humanRed = new ImageIcon("humanlvl2Red.PNG");
+					btns[i][j].setIcon(humanRed);
+				} else {
+					final ImageIcon human = new ImageIcon("humanlvl2.PNG");
+					btns[i][j].setIcon(human);
+				}
+			}
+		} else {
+			if ((i == 4 && j == 11) || (i == 5 && j == 11)) {
+				btns[i][j].setIcon(confetti);
+			} else {
+				if (isDinosaurZone()) {
+					final ImageIcon humanRed = new ImageIcon("humanGroundRed.PNG");
+					btns[i][j].setIcon(humanRed);
+				} else {
+					final ImageIcon human = new ImageIcon("humanGround.PNG");
+					btns[i][j].setIcon(human);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates grass icon
+	 * 
+	 * @param i
+	 *            row i
+	 * @param j
+	 *            column j
+	 * @param level
+	 *            current level in game
+	 */
+	public void updateGrassIcon(int i, int j, int level) {
+
+		if (level == 1) {
+			final ImageIcon icon = new ImageIcon("grass.jpg");
+			btns[i][j].setIcon(icon);
+		} else if (level == 2) {
+			final ImageIcon icon = new ImageIcon("l2grass.PNG");
+			btns[i][j].setIcon(icon);
+		} else {
+			final ImageIcon icon = new ImageIcon("ground.jpg");
+			btns[i][j].setIcon(icon);
+		}
+	}
+
+	/**
+	 * Messages class, which displays JOptionPanes to the player for communication.
+	 * Works with button listener class
+	 * 
+	 * @author mraheem
+	 * @version 1.0
+	 */
+	private class Messages {
+		private JFrame box = new JFrame();
+
+		/**
+		 * This method will display a message to the player if a pterodactyl found them
+		 * 
+		 * @return true if the pterodactyl found the human
+		 */
+		public boolean pterodactlyMessage() {
+			RandomGen r = new RandomGen();
+			if (r.randomNumber()) {
+				UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+				UIManager.put("Panel.background", Color.GRAY.brighter());
+				String ptero = "Whoa! Looks like you caught the eye of a pterodactyl! That's gonna hurt...";
+				JLabel message = new JLabel(ptero);
+				message.setFont(new Font("Chiller", Font.PLAIN, 35));
+				message.setForeground(Color.GREEN.darker().darker().darker());
+				ImageIcon pterodactyl = new ImageIcon("pterodactyl.png");
+				JOptionPane.showMessageDialog(box, message, null, JOptionPane.PLAIN_MESSAGE, pterodactyl);
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * This method chooses a message to display to the player if they are within a
+		 * herbivore's zone of damage
+		 */
+		public void herbMessage() {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			JLabel label = new JLabel();
+			String message1 = "Whoops! Looks like the dinosaur accidently hit you with its tail!";
+			String message2 = "Uh-oh, looks like you got in the way of a dinosaur...";
+			String message3 = "Looks like you got in the middle of a dinosaur and its food";
+			RandomGen r = new RandomGen();
+			int message = r.randomNum(3);
+			if (message == 1) {
+				label = new JLabel(message1);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 2) {
+				label = new JLabel(message2);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 3) {
+				label = new JLabel(message3);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			}
+		}
+
+		/**
+		 * This method chooses a message to display to the player if they are within a
+		 * velociraptor's zone of damage
+		 */
+		public void veloMessage() {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			JLabel label = new JLabel();
+			String message1 = "Those velociraptors must think you look tasty";
+			String message2 = "Watch out! Those velociraptors look hungry!";
+			String message3 = "Yikes! That velociraptor sure got close!";
+			RandomGen r = new RandomGen();
+			int message = r.randomNum(3);
+			if (message == 1) {
+				label = new JLabel(message1);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 2) {
+				label = new JLabel(message2);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 3) {
+				label = new JLabel(message3);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			}
+		}
+
+		/**
+		 * This method chooses a message to display to the player if they are within the
+		 * t-rex's zone of damage
+		 */
+		public void rexMessage() {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			JLabel label = new JLabel();
+			String message1 = "Watch out for the T-Rex!";
+			String message2 = "Those teeth look sharp...";
+			String message3 = "Run faster! The T-Rex is catching up!";
+			RandomGen r = new RandomGen();
+			int message = r.randomNum(3);
+			if (message == 1) {
+				label = new JLabel(message1);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 2) {
+				label = new JLabel(message2);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			} else if (message == 3) {
+				label = new JLabel(message3);
+				label.setFont(new Font("Eras Demi ITC", Font.PLAIN, 20));
+				label.setForeground(Color.RED.darker());
+				JOptionPane.showMessageDialog(box, label, null, JOptionPane.PLAIN_MESSAGE, null);
+			}
+		}
+
+		/**
+		 * This method displays a message to the player telling them that their
+		 * attempted move is invalid
+		 */
+		public void invalidMessage() {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String invalid = "Not a valid move. Try again...";
+			JLabel message = new JLabel(invalid);
+			message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+			message.setForeground(Color.DARK_GRAY.darker());
+			JOptionPane.showMessageDialog(box, message, null, JOptionPane.PLAIN_MESSAGE, null);
+		}
+
+		/**
+		 * This method will display a message to the player telling them that they lost
+		 * the game
+		 */
+		public void lostGameMessage(int points) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String over = "You died...Game over :( \n\rYour score is: " + points;
+			JLabel message = new JLabel(over);
+			message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+			message.setForeground(Color.DARK_GRAY.darker());
+			ImageIcon cry = new ImageIcon("cry.png");
+			JOptionPane.showMessageDialog(box, message, "Too bad", JOptionPane.PLAIN_MESSAGE, cry);
+
+		}
+
+		/**
+		 * This method displays a message to the player telling them that they are stuck
+		 * and cannot move anywhere on the board
+		 */
+		public void humanTrappedMessage(int points) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String stuck = "You're stuck... Game over\n\rYour score is: " + points;
+			JLabel message = new JLabel(stuck);
+			message.setFont(new Font("Imprint MT Shadow", Font.PLAIN, 30));
+			message.setForeground(Color.BLACK.darker());
+			ImageIcon cry = new ImageIcon("cry.png");
+			JOptionPane.showMessageDialog(box, message, "Uh-Oh", JOptionPane.PLAIN_MESSAGE, cry);
+		}
+
+		/**
+		 * This method will display a message to the player if they stepped in lava
+		 */
+		public void humanKilledInLavaMessage(int points) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String lavaMsg = "The lava got to you! You died...\n\rYour score is: " + points;
+			JLabel message = new JLabel(lavaMsg);
+			message.setFont(new Font("Chiller", Font.BOLD, 30));
+			message.setForeground(Color.RED);
+			ImageIcon lava = new ImageIcon("moltenLava.gif");
+			JOptionPane.showMessageDialog(box, message, "Ahhh!", JOptionPane.INFORMATION_MESSAGE, lava);
+		}
+
+		/**
+		 * This method will display a riddle to the player and have them answer it
+		 * 
+		 * @param riddle
+		 *            the riddle being asked
+		 * @return the answer that the player gives
+		 */
+		public String showRiddle(String riddle) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			ImageIcon question = new ImageIcon("question.jpg");
+			JLabel ask = new JLabel(riddle);
+			ask.setFont(new Font("Century Gothic", Font.BOLD, 20));
+			ask.setForeground(Color.CYAN.darker().darker().darker());
+			String answer = (String) JOptionPane.showInputDialog(box, ask, "Your riddle is: ", 0, question, null, "");
+			return answer;
+		}
+
+		/**
+		 * This method responds to the answer the player gave to a riddle
+		 * 
+		 * @param correct
+		 *            whether or not the player's answer was correct
+		 */
+		public void respondRiddle(boolean correct) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			if (correct) {
+				String right = "You got the riddle right! You can eat some fruit for health points";
+				JLabel message = new JLabel(right);
+				message.setFont(new Font("Century Gothic", Font.BOLD, 15));
+				message.setForeground(Color.GREEN.darker().darker().darker());
+				ImageIcon berries = new ImageIcon("berryBush.PNG");
+				JOptionPane.showMessageDialog(box, message, "Good job!", JOptionPane.INFORMATION_MESSAGE, berries);
+
+			} else {
+				String wrong = "Sorry, incorrect answer.";
+				JLabel message = new JLabel(wrong);
+				message.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+				message.setForeground(Color.BLUE.brighter());
+				ImageIcon cry = new ImageIcon("cry.png");
+				JOptionPane.showMessageDialog(box, message, "Oops", JOptionPane.INFORMATION_MESSAGE, cry);
+			}
+		}
+
+		/**
+		 * This method displays a message telling the player that they escaped level
+		 * one/two
+		 */
+		public void escapeLevel(int points) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String congrats = "Congratulations! You escaped a part of the island!\r On to the next part...\rYour score is: "
+					+ points;
+			JLabel message = new JLabel(congrats);
+			message.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+			message.setForeground(Color.BLUE);
+			ImageIcon confetti = new ImageIcon("confetti.png");
+			JOptionPane.showMessageDialog(box, message, "You did it!", JOptionPane.INFORMATION_MESSAGE, confetti);
+		}
+
+		/**
+		 * This method displays a message telling the player that they escaped level
+		 * three and won the game
+		 */
+		public void escapeIsland(int points) {
+			UIManager.put("OptionPane.background", Color.GREEN.darker().darker());
+			UIManager.put("Panel.background", Color.GRAY.brighter());
+			String congrats = "Congratulations! You managed to make it past all the dinosaurs and have reached the boat! \rSafe travels! \nYour score is: "
+					+ points;
+			JLabel message = new JLabel(congrats);
+			message.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+			message.setForeground(Color.BLUE);
+			ImageIcon confetti = new ImageIcon("confetti.png");
+			JOptionPane.showMessageDialog(box, message, "You won!", JOptionPane.INFORMATION_MESSAGE, confetti);
+		}
+	}
+
+}
